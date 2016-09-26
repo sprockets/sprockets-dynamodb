@@ -160,7 +160,7 @@ class AWSClientTests(AsyncTestCase):
                 self.assertEqual(measurement.attempt, attempt + 1)
                 self.assertEqual(measurement.action, 'CreateTable')
                 self.assertEqual(measurement.table, definition['TableName'])
-                self.assertEqual(measurement.error, None)
+                self.assertEqual(measurement.error, 'RequestException')
             self.assertEqual(len(measurements), 3)
             wait_for_measurements.set()
 

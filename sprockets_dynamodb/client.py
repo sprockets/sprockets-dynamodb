@@ -1273,7 +1273,9 @@ class Client(object):
                     exceptions.ThrottlingException,
                     exceptions.ThroughputExceeded) as error:
                 if attempt == self._max_retries:
-                    raise error
+                    if self._instrumentation_callback:
+                        self._instrumentation_callback(measurements)
+                    self._on_exception(error)
                 duration = self._sleep_duration(attempt)
                 self.logger.warning('%r on attempt %i, sleeping %.2f seconds',
                                     error, attempt, duration)
@@ -1295,6 +1297,7 @@ class Client(object):
         :param method callback: The method to invoke
 
         """
+        LOGGER.debug('Setting error callback: %r', callback)
         self._on_error = callback
 
     def set_instrumentation_callback(self, callback):
@@ -1304,6 +1307,7 @@ class Client(object):
         :param method callback: The method to invoke
 
         """
+        LOGGER.debug('Setting instrumentation callback: %r', callback)
         self._instrumentation_callback = callback
 
     def _execute(self, action, parameters, attempt, measurements):
