@@ -45,7 +45,7 @@ class DynamoDBMixin(object):
         for row in measurements:
             measurement = influxdb.Measurement(INFLUXDB_DATABASE,
                                                INFLUXDB_MEASUREMENT)
-            measurement.set_timestamp('timestamp', row.timestamp)
+            measurement.set_timestamp(row.timestamp)
             measurement.set_tag('action', row.action)
             measurement.set_tag('table', row.table)
             measurement.set_tag('attempt', row.attempt)
