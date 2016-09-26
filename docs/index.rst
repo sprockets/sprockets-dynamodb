@@ -4,6 +4,7 @@
    :hidden:
 
    api
+   exceptions
    examples
    contributing
    history

@@ -48,14 +48,14 @@ test coverage as well::
 
    running nosetests
    running egg_info
-   writing dependency_links to sprockets.clients.dynamodb.egg-info/dependency_links.txt
-   writing top-level names to sprockets.clients.dynamodb.egg-info/top_level.txt
-   writing sprockets.clients.dynamodb.egg-info/PKG-INFO
-   reading manifest file 'sprockets.clients.dynamodb.egg-info/SOURCES.txt'
+   writing dependency_links to sprockets_dynamodb/dependency_links.txt
+   writing top-level names to sprockets_dynamodb/top_level.txt
+   writing sprockets_dynamodb/PKG-INFO
+   reading manifest file 'sprockets_dynamodb/SOURCES.txt'
    reading manifest template 'MANIFEST.in'
    warning: no previously-included files matching '__pycache__'...
    warning: no previously-included files matching '*.swp' found ...
-   writing manifest file 'sprockets.clients.dynamodb.egg-info/SOURCES.txt'
+   writing manifest file 'sprockets_dynamodb/SOURCES.txt'
    ...
 
    Name                       Stmts   Miss Branch BrMiss  Cover   Missing
