@@ -1,9 +1,19 @@
-sudo: false
+sudo: required
+services:
+  - docker
 language: python
 python:
  - 2.7
  - 3.4
  - 3.5
+before_install:
+- docker pull tray/dynamodb-local
+- docker run -d -p 7777:7777 tray/dynamodb-local -inMemory -port 7777
+- mkdir /home/travis/.aws
+- printf "[default]\nregion=us-east-1\noutput=json\n" > /home/travis/.aws/config
+- printf "[default]\naws_access_key_id = FAKE0000000000000000\naws_secret_access_key = FAKE000000000000000000000000000000000000\n" > /home/travis/.aws/credentials
+env:
+  DYNAMODB_ENDPOINT: http://localhost:7777
 install:
  - pip install -r requires/testing.txt
 script: nosetests --with-coverage
