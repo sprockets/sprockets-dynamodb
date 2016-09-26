@@ -45,7 +45,7 @@ TABLE_DEF = {
     }
 }
 
-dynamo = dynamodb.DynamoDB()
+dynamo = dynamodb.Client()
 iol = ioloop.IOLoop.instance()
 
 
