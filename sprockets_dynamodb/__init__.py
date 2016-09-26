@@ -5,7 +5,7 @@ Sprockets DynamoDB
 """
 import logging
 
-version_info = (1, 0, 0)
+version_info = (1, 0, 1)
 __version__ = '.'.join(str(v) for v in version_info)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -14,6 +14,11 @@ try:
     from sprockets_dynamodb.client import Client
 except ImportError:
     Client = None
+try:
+    from sprockets_dynamodb.mixin import DynamoDBMixin
+except ImportError:
+    DynamoDBMixin = None
+
 from sprockets_dynamodb.exceptions import *
 
 # Response constants
@@ -30,6 +35,7 @@ __all__ = [
     'mixin',
     'utils',
     'Client',
+    'DynamoDBMixin',
     'DynamoDBException',
     'ConditionalCheckFailedException',
     'ConfigNotFound',
