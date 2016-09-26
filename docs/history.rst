@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`1.0.1`_ (26 Sep 2016)
+----------------------
+- Make ``DynamoDBMixin`` available from ``sprockets_dynamodb``
+
 `1.0.0`_ (26 Sep 2016)
 ----------------------
 - Initial release
@@ -10,5 +14,6 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/1.0.0...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/1.0.1...master
+.. _1.0.1: https://github.com/sprockets/sprockets-influxdb/compare/1.0.0...1.0.1
 .. _1.0.0: https://github.com/sprockets/sprockets-influxdb/compare/0.0.0...1.0.0
