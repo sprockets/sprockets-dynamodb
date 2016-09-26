@@ -954,7 +954,7 @@ class Client(object):
             consistent reads are not supported on global secondary indexes. If
             you query a global secondary index with ``consistent_read`` set to
             ``True``, you will receive a
-            :exc:`~tornado_dynamodb.exceptions.ValidationException`.
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`.
         :param str|bytes|int exclusive_start_key: The primary key of the first
             item that this operation will evaluate. Use the value that was
             returned for ``LastEvaluatedKey`` in the previous operation. In a
@@ -1112,7 +1112,7 @@ class Client(object):
             This parameter is not supported on global secondary indexes. If you
             scan a global secondary index and set ``consistent_read`` to
             ``true``, you will receive a
-            :exc:`~tornado_dynamodb.exceptions.ValidationException`.
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`.
         :param str|bytes|int exclusive_start_key: The primary key of the first
             item that this operation will evaluate. Use the value that was
             returned for ``LastEvaluatedKey`` in the previous operation.
