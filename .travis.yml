@@ -13,6 +13,7 @@ before_install:
 - printf "[default]\nregion=us-east-1\noutput=json\n" > /home/travis/.aws/config
 - printf "[default]\naws_access_key_id = FAKE0000000000000000\naws_secret_access_key = FAKE000000000000000000000000000000000000\n" > /home/travis/.aws/credentials
 env:
+  ASYNC_TEST_TIMEOUT: 15
   DYNAMODB_ENDPOINT: http://localhost:7777
 install:
  - pip install -r requires/testing.txt
