@@ -100,20 +100,20 @@ class Client(object):
            latest/APIReference/API_CreateTable.html
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
         future = concurrent.TracebackFuture()
@@ -154,20 +154,20 @@ class Client(object):
         :rtype: tornado.concurrent.Future
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _UpdateTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_UpdateTable.html
@@ -182,9 +182,9 @@ class Client(object):
         table is in the DELETING state until DynamoDB completes the deletion.
         If the table is in the ACTIVE state, you can delete it. If a table is
         in CREATING or UPDATING states, then a
-        :py:exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
+        :py:exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
         exception is raised. If the  specified table does not exist, a
-        :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
+        :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
         exception is raised. If table is already in the DELETING state, no
         error is returned.
 
@@ -266,20 +266,20 @@ class Client(object):
                 }
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _DeleteTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DeleteTable.html
@@ -369,20 +369,20 @@ class Client(object):
                 }
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _DescribeTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DescribeTable.html
@@ -427,20 +427,20 @@ class Client(object):
                 }
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _ListTables: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_ListTables.html
@@ -476,7 +476,7 @@ class Client(object):
         type attributes must have lengths greater than zero. Set type
         attributes cannot be empty. Requests with empty values will be rejected
         with a
-        :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`.
+        :exc:`~sprockets_dynamodb.exceptions.ValidationException`.
 
         You can request that PutItem return either a copy of the original item
         (before the update) or a copy of the updated item (after the update).
@@ -531,20 +531,20 @@ class Client(object):
         :rtype: tornado.concurrent.Future
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _PutItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_PutItem.html
@@ -603,22 +603,22 @@ class Client(object):
         :rtype: tornado.concurrent.Future
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _GetItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_GetItem.html
@@ -682,22 +682,22 @@ class Client(object):
         :rtype: dict
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _UpdateItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_UpdateItem.html
@@ -839,22 +839,22 @@ class Client(object):
                 }
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _DeleteItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DeleteItem.html
@@ -866,22 +866,22 @@ class Client(object):
         """Invoke the `BatchGetItem`_ function.
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _BatchGetItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_BatchGetItem.html
@@ -893,22 +893,22 @@ class Client(object):
         """Invoke the `BatchWriteItem`_ function.
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _BatchWriteItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_BatchWriteItem.html
@@ -1043,22 +1043,22 @@ class Client(object):
         :rtype: dict
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _Query: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_Query.html
@@ -1207,22 +1207,22 @@ class Client(object):
         :rtype: dict
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _Scan: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_Scan.html
@@ -1246,22 +1246,22 @@ class Client(object):
         functions currently.
 
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
         measurements = collections.deque([], self._max_retries)
@@ -1315,22 +1315,22 @@ class Client(object):
         :param list measurements: A list for accumulating request measurements
         :rtype: tornado.concurrent.Future
         :raises:
-            :exc:`~sprockets.clients.dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets.clients.dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestException`
-            :exc:`~sprockets.clients.dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets.clients.dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets.clients.dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets.clients.dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets.clients.dynamodb.exceptions.ValidationException`
+            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
+            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
+            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
+            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
+            :exc:`~sprockets_dynamodb.exceptions.RequestException`
+            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
+            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
+            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
+            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
+            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
+            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
+            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
+            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
         future = concurrent.TracebackFuture()
