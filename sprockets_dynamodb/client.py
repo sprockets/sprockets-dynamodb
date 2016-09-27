@@ -1361,7 +1361,7 @@ class Client(object):
             future.set_exception(exceptions.NoCredentialsError(str(error)))
         except aws_exceptions.NoProfileError as error:
             future.set_exception(exceptions.NoProfileError(str(error)))
-        except (ConnectionError, ConnectionResetError, OSError,
+        except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
                 select.error, ssl.socket_error, socket.gaierror) as error:
             future.set_exception(exceptions.RequestException(str(error)))
         except TimeoutError:

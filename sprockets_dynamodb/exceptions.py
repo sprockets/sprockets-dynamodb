@@ -113,8 +113,6 @@ class OptInRequired(DynamoDBException):
     pass
 
 
-
-
 class RequestException(DynamoDBException):
     """Raised when the HTTP request failed due to a network or DNS related
     issue.
