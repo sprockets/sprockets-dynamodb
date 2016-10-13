@@ -1264,6 +1264,18 @@ class Client(object):
             :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
+        result = yield self._execute_action(action, parameters)
+
+        # Unwrapped results can be a list or dict
+        results = _unwrap_result(action, result)
+        while 'LastEvaluatedKey' in result:
+            parameters['ExclusiveStartKey'] = result['LastEvaluatedKey']
+            result = yield self._execute_action(action, parameters)
+            results.extend(_unwrap_result(action, result))
+        raise gen.Return(results)
+
+    @gen.coroutine
+    def _execute_action(self, action, parameters):
         measurements = collections.deque([], self._max_retries)
         for attempt in range(1, self._max_retries + 1):
             try:
@@ -1422,8 +1434,6 @@ class Client(object):
             error = exceptions.TimeoutException()
         except Exception as exception:
             error = exception
-        else:
-            result = _unwrap_result(action, result)
         measurements.append(
             Measurement(now, action, table, attempt, max(now, start) - start,
                         error.__class__.__name__ if error else error))
