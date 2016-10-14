@@ -73,7 +73,7 @@ def unmarshall(values):
 def _encode_binary_set(value):
     """Base64 encode binary values in list of values.
 
-    :param list value: The list of binary values
+    :param set value: The list of binary values
     :rtype: list
 
     """
