@@ -276,32 +276,100 @@ class ListTableTests(AsyncTestCase):
 
     @testing.gen_test
     def test_list_tables(self):
-        # Create the table first
         definition = self.generic_table_definition()
         response = yield self.client.create_table(definition)
         self.assertEqual(response['TableName'], definition['TableName'])
 
-        # Describe the table
         response = yield self.client.list_tables(limit=100)
         self.assertIn(definition['TableName'], response['TableNames'])
 
+        yield self.client.delete_table(definition['TableName'])
 
-class PutGetDeleteTests(AsyncTestCase):
+        response = yield self.client.list_tables(limit=100)
+        self.assertNotIn(definition['TableName'], response['TableNames'])
+
+
+class ItemLifecycleTests(AsyncTestCase):
+
+    def setUp(self):
+        self.definition = self.generic_table_definition()
+        return super(ItemLifecycleTests, self).setUp()
+
+    def tearDown(self):
+        yield self.client.delete_table(self.definition['TableName'])
+        return super(ItemLifecycleTests, self).setUp()
+
+
+    def _create_item(self):
+        return {
+            'id': str(uuid.uuid4()),
+            'created_at': datetime.datetime.utcnow(),
+            'value': str(uuid.uuid4())
+        }
+
+    def _create_table(self):
+        return self.client.create_table(self.definition)
+
+    def _delete_item(self, item_id):
+        return self.client.delete_item(self.definition['TableName'],
+                                       {'id': item_id},
+                                       return_consumed_capacity='TOTAL',
+                                       return_item_collection_metrics='SIZE',
+                                       return_values='ALL_OLD')
+
+    def _get_item(self, item_id):
+        return self.client.get_item(self.definition['TableName'],
+                                    {'id': item_id})
+
+    def _put_item(self, item):
+        return self.client.put_item(self.definition['TableName'], item,
+                                    return_consumed_capacity='TOTAL',
+                                    return_item_collection_metrics='SIZE',
+                                    return_values='ALL_OLD')
 
     @testing.gen_test
-    def test_put_item(self):
-        # Create the table first
-        definition = self.generic_table_definition()
-        response = yield self.client.create_table(definition)
-        self.assertEqual(response['TableName'], definition['TableName'])
+    def test_item_lifecycle(self):
+        yield self._create_table()
 
-        row_id = uuid.uuid4()
+        item = self._create_item()
 
-        # Describe the table
-        yield self.client.put_item(
-            definition['TableName'],
-            {'id': row_id, 'created_at': datetime.datetime.utcnow()})
+        response = yield self._put_item(item)
+        self.assertIsNone(response)
 
-        response = yield self.client.get_item(definition['TableName'],
-                                              {'id': row_id})
-        self.assertEqual(response['id'], str(row_id))
+        response = yield self._get_item(item['id'])
+        self.assertEqual(response['Item']['id'], item['id'])
+
+        item['update_check'] = str(uuid.uuid4())
+
+        response = yield self._put_item(item)
+        self.assertEqual(response['Attributes']['id'], item['id'])
+
+        response = yield self._get_item(item['id'])
+        self.assertEqual(response['Item']['id'], item['id'])
+        self.assertEqual(response['Item']['update_check'],
+                         item['update_check'])
+
+        update_check = str(uuid.uuid4())
+
+        response = yield self.client.update_item(
+            self.definition['TableName'], {'id': item['id']},
+            condition_expression='#update_check = :old_value',
+            update_expression='SET #update_check = :update_check',
+            expression_attribute_names={'#update_check': 'update_check'},
+            expression_attribute_values={
+                ':old_value': item['update_check'],
+                ':update_check': update_check
+            },
+            return_consumed_capacity='TOTAL',
+            return_item_collection_metrics='SIZE',
+            return_values='ALL_OLD')
+        self.assertEqual(response['Attributes']['id'], item['id'])
+        self.assertEqual(response['Attributes']['update_check'],
+                         item['update_check'])
+
+        response = yield self._delete_item(item['id'])
+        self.assertEqual(response['Attributes']['id'], item['id'])
+        self.assertEqual(response['Attributes']['update_check'], update_check)
+
+        response = yield self._get_item(item['id'])
+        self.assertIsNone(response)

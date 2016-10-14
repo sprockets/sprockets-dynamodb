@@ -5,7 +5,7 @@ Sprockets DynamoDB
 """
 import logging
 
-version_info = (1, 1, 0)
+version_info = (2, 0, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

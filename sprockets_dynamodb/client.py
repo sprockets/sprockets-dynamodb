@@ -69,6 +69,24 @@ class Client(object):
         a request exception that can not automatically be retried or the
         maximum number of retries has been exceeded for a request.
 
+    Any of the methods invoked in the client can raise the following
+    exceptions:
+
+      - :exc:`sprockets_dynamodb.exceptions.DynamoDBException`
+      - :exc:`sprockets_dynamodb.exceptions.ConfigNotFound`
+      - :exc:`sprockets_dynamodb.exceptions.NoCredentialsError`
+      - :exc:`sprockets_dynamodb.exceptions.NoProfileError`
+      - :exc:`sprockets_dynamodb.exceptions.TimeoutException`
+      - :exc:`sprockets_dynamodb.exceptions.RequestException`
+      - :exc:`sprockets_dynamodb.exceptions.InternalFailure`
+      - :exc:`sprockets_dynamodb.exceptions.LimitExceeded`
+      - :exc:`sprockets_dynamodb.exceptions.MissingParameter`
+      - :exc:`sprockets_dynamodb.exceptions.OptInRequired`
+      - :exc:`sprockets_dynamodb.exceptions.ResourceInUse`
+      - :exc:`sprockets_dynamodb.exceptions.RequestExpired`
+      - :exc:`sprockets_dynamodb.exceptions.ServiceUnavailable`
+      - :exc:`sprockets_dynamodb.exceptions.ValidationException`
+
     Create an instance of this class to interact with a DynamoDB
     server.  A :class:`tornado_aws.client.AsyncAWSClient` instance
     implements the AWS API wrapping and this class provides the
@@ -100,20 +118,7 @@ class Client(object):
            latest/APIReference/API_CreateTable.html
 
         :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
+
 
         """
         future = concurrent.TracebackFuture()
@@ -140,7 +145,7 @@ class Client(object):
         - Enable or disable Streams on the table.
         - Remove a global secondary index from the table.
         - Create a new global secondary index on the table. Once the index
-          begins backfilling, you can use *UpdateTable* to perform other
+          begins back-filling, you can use *UpdateTable* to perform other
           operations.
 
         *UpdateTable* is an asynchronous operation; while it is executing, the
@@ -152,22 +157,6 @@ class Client(object):
         :param dict table_definition: description of the table to
             update according to `UpdateTable`_
         :rtype: tornado.concurrent.Future
-
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _UpdateTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_UpdateTable.html
@@ -265,22 +254,6 @@ class Client(object):
                   "TableStatus": "string"
                 }
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _DeleteTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DeleteTable.html
 
@@ -368,22 +341,6 @@ class Client(object):
                   "TableStatus": "string"
                 }
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _DescribeTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DescribeTable.html
 
@@ -426,22 +383,6 @@ class Client(object):
                   ]
                 }
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _ListTables: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_ListTables.html
 
@@ -453,12 +394,13 @@ class Client(object):
             payload['Limit'] = limit
         return self.execute('ListTables', payload)
 
-    def put_item(self, table_name, item, return_values=None,
+    def put_item(self, table_name, item,
                  condition_expression=None,
                  expression_attribute_names=None,
                  expression_attribute_values=None,
                  return_consumed_capacity=None,
-                 return_item_collection_metrics=False):
+                 return_item_collection_metrics=None,
+                 return_values=None):
         """Invoke the `PutItem`_ function, creating a new item, or replaces an
         old item with a new item. If an item that has the same primary key as
         the new item already exists in the specified table, the new item
@@ -505,9 +447,6 @@ class Client(object):
             If you specify any attributes that are part of an index key, then
             the data types for those attributes must match those of the schema
             in the table's attribute definition.
-        :param bool return_values: Set to ``True`` if you want to get the item
-            attributes as they appeared before they were updated with the
-            *PutItem* request.
         :param str condition_expression: A condition that must be satisfied in
             order for a conditional *PutItem* operation to succeed. See the
             `AWS documentation for ConditionExpression <http://docs.aws.amazon.
@@ -526,25 +465,12 @@ class Client(object):
         :param str return_consumed_capacity: Determines the level of detail
             about provisioned throughput consumption that is returned in the
             response. Should be ``None`` or one of ``INDEXES`` or ``TOTAL``
-        :param bool return_item_collection_metrics: Determines whether item
+        :param str return_item_collection_metrics: Determines whether item
             collection metrics are returned.
+        :param str return_values: Use ``ReturnValues`` if you want to get the
+            item attributes as they appeared before they were updated with the
+            ``PutItem`` request.
         :rtype: tornado.concurrent.Future
-
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _PutItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_PutItem.html
@@ -562,12 +488,15 @@ class Client(object):
         if return_item_collection_metrics:
             payload['ReturnItemCollectionMetrics'] = 'SIZE'
         if return_values:
+            _validate_return_values(return_values)
             payload['ReturnValues'] = return_values
         return self.execute('PutItem', payload)
 
-    def get_item(self, table_name, key_dict, consistent_read=False,
+    def get_item(self, table_name, key_dict,
+                 consistent_read=False,
                  expression_attribute_names=None,
-                 projection_expression=None, return_consumed_capacity=None):
+                 projection_expression=None,
+                 return_consumed_capacity=None):
         """
         Invoke the `GetItem`_ function.
 
@@ -602,24 +531,6 @@ class Client(object):
                 response.
         :rtype: tornado.concurrent.Future
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _GetItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_GetItem.html
 
@@ -632,15 +543,18 @@ class Client(object):
         if projection_expression:
             payload['ProjectionExpression'] = projection_expression
         if return_consumed_capacity:
+            _validate_return_consumed_capacity(return_consumed_capacity)
             payload['ReturnConsumedCapacity'] = return_consumed_capacity
         return self.execute('GetItem', payload)
 
-    def update_item(self, table_name, key, return_values=False,
-                    condition_expression=None, update_expression=None,
+    def update_item(self, table_name, key_dict,
+                    condition_expression=None,
+                    update_expression=None,
                     expression_attribute_names=None,
                     expression_attribute_values=None,
                     return_consumed_capacity=None,
-                    return_item_collection_metrics=False):
+                    return_item_collection_metrics=None,
+                    return_values=None):
         """Invoke the `UpdateItem`_ function.
 
         Edits an existing item's attributes, or adds a new item to the table
@@ -652,15 +566,12 @@ class Client(object):
 
         :param str table_name: The name of the table that contains the item to
             update
-        :param dict key: A dictionary of key/value pairs that are used to
+        :param dict key_dict: A dictionary of key/value pairs that are used to
             define the primary key values for the item. For the primary key,
             you must provide all of the attributes. For example, with a simple
             primary key, you only need to provide a value for the partition
             key. For a composite primary key, you must provide values for both
             the partition key and the sort key.
-        :param bool return_values: Set to ``True`` if you want to get the item
-            attributes as they appeared before they were updated with the
-            *UpdateItem* request.
         :param str condition_expression: A condition that must be satisfied in
             order for a conditional *UpdateItem* operation to succeed. One of:
             ``attribute_exists``, ``attribute_not_exists``, ``attribute_type``,
@@ -676,40 +587,53 @@ class Client(object):
             substituted in an expression.
         :param str return_consumed_capacity: Determines the level of detail
             about provisioned throughput consumption that is returned in the
-            response. Should be ``None`` or one of ``INDEXES`` or ``TOTAL``
-        :param bool return_item_collection_metrics: Determines whether item
+            response. See the `AWS documentation
+            for ReturnConsumedCapacity <http://docs.aws.amazon.com/
+            amazondynamodb/latest/APIReference/API_UpdateItem.html#DDB-Update
+            Item-request-ReturnConsumedCapacity>`_ for more information.
+        :param str return_item_collection_metrics: Determines whether item
             collection metrics are returned.
-        :rtype: dict
+        :param str return_values: Use ReturnValues if you want to get the item
+            attributes as they appeared either before or after they were
+            updated. See the `AWS documentation for ReturnValues <http://docs.
+            aws.amazon.com/amazondynamodb/latest/APIReference/
+            API_UpdateItem.html#DDB-UpdateItem-request-ReturnValues>`_
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
+        :rtype: dict
 
         .. _UpdateItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_UpdateItem.html
 
         """
-        raise NotImplementedError
+        payload = {'TableName': table_name,
+                   'Key': utils.marshall(key_dict),
+                   'UpdateExpression': update_expression}
+        if condition_expression:
+            payload['ConditionExpression'] = condition_expression
+        if expression_attribute_names:
+            payload['ExpressionAttributeNames'] = expression_attribute_names
+        if expression_attribute_values:
+            payload['ExpressionAttributeValues'] = \
+                utils.marshall(expression_attribute_values)
+        if return_consumed_capacity:
+            _validate_return_consumed_capacity(return_consumed_capacity)
+            payload['ReturnConsumedCapacity'] = return_consumed_capacity
+        if return_item_collection_metrics:
+            _validate_return_item_collection_metrics(
+                return_item_collection_metrics)
+            payload['ReturnItemCollectionMetrics'] = \
+                return_item_collection_metrics
+        if return_values:
+            _validate_return_values(return_values)
+            payload['ReturnValues'] = return_values
+        return self.execute('UpdateItem', payload)
 
-    def delete_item(self, table_name, key, condition_expression=None,
+    def delete_item(self, table_name, key_dict,
+                    condition_expression=None,
                     expression_attribute_names=None,
                     expression_attribute_values=None,
                     return_consumed_capacity=None,
-                    return_item_collection_metrics=False,
+                    return_item_collection_metrics=None,
                     return_values=False):
         """Invoke the `DeleteItem`_ function that deletes a single item in a
         table by primary key. You can perform a conditional delete operation
@@ -730,7 +654,7 @@ class Client(object):
 
         :param str table_name: The name of the table from which to delete the
             item.
-        :param dict key: A map of attribute names to ``AttributeValue``
+        :param dict key_dict: A map of attribute names to ``AttributeValue``
             objects, representing the primary key of the item to delete. For
             the primary key, you must provide all of the attributes. For
             example, with a simple primary key, you only need to provide a
@@ -757,9 +681,9 @@ class Client(object):
             for ReturnConsumedCapacity <http://docs.aws.amazon.com/
             amazondynamodb/latest/APIReference/API_DeleteItem.html#DDB-Delete
             Item-request-ReturnConsumedCapacity>`_ for more information.
-        :param bool return_item_collection_metrics: Determines whether item
+        :param str return_item_collection_metrics: Determines whether item
             collection metrics are returned.
-        :param bool return_values: Return the item attributes as they appeared
+        :param str return_values: Return the item attributes as they appeared
             before they were deleted.
         :returns: Response format:
 
@@ -767,28 +691,7 @@ class Client(object):
 
                 {
                   "Attributes": {
-                    "string": {
-                      "B": blob,
-                      "BOOL": boolean,
-                      "BS": [
-                        blob
-                      ],
-                      "L": [
-                        AttributeValue
-                      ],
-                      "M": {
-                        "string": AttributeValue
-                      },
-                      "N": "string",
-                      "NS": [
-                        "string"
-                      ],
-                      "NULL": boolean,
-                      "S": "string",
-                      "SS": [
-                        "string"
-                      ]
-                    }
+                    "key": "value"
                   },
                   "ConsumedCapacity": {
                     "CapacityUnits": number,
@@ -838,29 +741,32 @@ class Client(object):
                   }
                 }
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
+            :exc:`ValueError`
 
         .. _DeleteItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DeleteItem.html
 
         """
-        raise NotImplementedError
+        payload = {'TableName': table_name, 'Key': utils.marshall(key_dict)}
+        if condition_expression:
+            payload['ConditionExpression'] = condition_expression
+        if expression_attribute_names:
+            payload['ExpressionAttributeNames'] = expression_attribute_names
+        if expression_attribute_values:
+            payload['ExpressionAttributeValues'] = \
+                utils.marshall(expression_attribute_values)
+        if return_consumed_capacity:
+            _validate_return_consumed_capacity(return_consumed_capacity)
+            payload['ReturnConsumedCapacity'] = return_consumed_capacity
+        if return_item_collection_metrics:
+            _validate_return_item_collection_metrics(
+                return_item_collection_metrics)
+            payload['ReturnItemCollectionMetrics'] = \
+                return_item_collection_metrics
+        if return_values:
+            _validate_return_values(return_values)
+            payload['ReturnValues'] = return_values
+        return self.execute('DeleteItem', payload)
 
     def batch_get_item(self):
         """Invoke the `BatchGetItem`_ function.
@@ -1265,14 +1171,7 @@ class Client(object):
 
         """
         result = yield self._execute_action(action, parameters)
-
-        # Unwrapped results can be a list or dict
-        results = _unwrap_result(action, result)
-        while 'LastEvaluatedKey' in result:
-            parameters['ExclusiveStartKey'] = result['LastEvaluatedKey']
-            result = yield self._execute_action(action, parameters)
-            results.extend(_unwrap_result(action, result))
-        raise gen.Return(results)
+        raise gen.Return(_unwrap_result(action, result))
 
     @gen.coroutine
     def _execute_action(self, action, parameters):
@@ -1349,6 +1248,7 @@ class Client(object):
             :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
+        LOGGER.debug('%s %r', action, parameters)
         future = concurrent.TracebackFuture()
         start = time.time()
 
@@ -1481,8 +1381,67 @@ def _unwrap_result(action, result):
     :rtype: list or dict
 
     """
-    if action == 'GetItem':
-        return utils.unmarshall(result['Item'] if result else {})
-    elif action == 'Query':
-        return [utils.unmarshall(item) for item in result.get('Items', [])]
+    LOGGER.debug('%s Result: %r', action, result)
+    if not result:
+        return
+    elif action in ['DeleteItem', 'PutItem', 'UpdateItem']:
+        return _unwrap_delete_put_update_item(result)
+    elif action == 'GetItem':
+        return _unwrap_get_item(result)
+    elif action == 'Query' or action == 'Scan':
+        return _unwrap_query_scan(result)
     return result
+
+
+def _unwrap_delete_put_update_item(result):
+    response = {
+       'Attributes': utils.unmarshall(result['Attributes'] if result else {})
+    }
+    if 'ConsumedCapacity' in result:
+        response['ConsumedCapacity'] = result['ConsumedCapacity']
+    if 'ItemCollectionMetrics' in result:
+        response['ItemCollectionMetrics'] = {
+            'ItemCollectionKey': utils.unmarshall(
+                result['ItemCollectionMetrics'].get('ItemCollectionKey', {})),
+            'SizeEstimateRangeGB':
+                result['ItemCollectionMetrics'].get('SizeEstimateRangeGB',
+                                                    [None]).pop()
+        }
+    LOGGER.debug('DELETE: %r', response)
+    return response
+
+
+def _unwrap_get_item(result):
+    response = {
+       'Item': utils.unmarshall(result['Item'] if result else {})
+    }
+    if 'ConsumedCapacity' in result:
+        response['ConsumedCapacity'] = result['ConsumedCapacity']
+    return response
+
+
+def _unwrap_query_scan(result):
+    response = {
+        'Count': result.get('Count', 0),
+        'Items': [utils.unmarshall(i) for i in result.get('Items', [])]
+    }
+    for key in ['ConsumedCapacity', 'LastEvaluatedKey', 'ScannedCount']:
+        if key in result:
+            response[key] = result[key]
+    return response
+
+
+def _validate_return_consumed_capacity(value):
+    if value not in ['INDEXES', 'TOTAL', 'NONE']:
+        raise ValueError('Invalid return_consumed_capacity value')
+
+
+def _validate_return_item_collection_metrics(value):
+    if value not in ['NONE', 'SIZE']:
+        raise ValueError('Invalid return_item_collection_metrics value')
+
+
+def _validate_return_values(value):
+    if value not in ['NONE', 'ALL_NEW', 'ALL_OLD',
+                     'UPDATED_NEW', 'UPDATED_OLD']:
+        raise ValueError('Invalid return_values value')
