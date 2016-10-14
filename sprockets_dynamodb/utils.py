@@ -22,6 +22,19 @@ import sys
 PYTHON3 = True if sys.version_info > (3, 0, 0) else False
 TEXT_CHARS = bytearray({7, 8, 9, 10, 12, 13, 27} |
                        set(range(0x20, 0x100)) - {0x7f})
+if PYTHON3:  # pragma: nocover
+    unicode = str
+
+
+def is_binary(value):
+    """
+    Check to see if a string contains binary data in Python2
+
+    :param str|bytes value: The value to check
+    :rtype: bool
+
+    """
+    return bool(value.translate(None, TEXT_CHARS))
 
 
 def marshall(values):
@@ -42,6 +55,31 @@ def marshall(values):
     return serialized
 
 
+def unmarshall(values):
+    """
+    Transform a response payload from DynamoDB to a native dict
+
+    :param dict values: The response payload from DynamoDB
+    :rtype: dict
+    :raises ValueError: if an unsupported type code is encountered
+
+    """
+    unmarshalled = {}
+    for key in values:
+        unmarshalled[key] = _unmarshall_dict(values[key])
+    return unmarshalled
+
+
+def _encode_binary_set(value):
+    """Base64 encode binary values in list of values.
+
+    :param list value: The list of binary values
+    :rtype: list
+
+    """
+    return sorted([base64.b64encode(v).decode('ascii') for v in value])
+
+
 def _marshall_value(value):
     """
     Recursively transform `value` into an AttributeValue `dict`
@@ -59,9 +97,11 @@ def _marshall_value(value):
     elif PYTHON3 and isinstance(value, str):
         return {'S': value}
     elif not PYTHON3 and isinstance(value, str):
-        if _is_binary(value):
+        if is_binary(value):
             return {'B':  base64.b64encode(value).decode('ascii')}
         return {'S': value}
+    elif not PYTHON3 and isinstance(value, unicode):
+        return {'S': value.encode('utf-8')}
     elif isinstance(value, dict):
         return {'M': marshall(value)}
     elif isinstance(value, bool):
@@ -82,10 +122,10 @@ def _marshall_value(value):
         elif all([isinstance(v, (int, float)) for v in value]):
             return {'NS': sorted([str(v) for v in value])}
         elif not PYTHON3 and all([isinstance(v, str) for v in value]) and \
-                all([_is_binary(v) for v in value]):
+                all([is_binary(v) for v in value]):
             return {'BS': _encode_binary_set(value)}
         elif not PYTHON3 and all([isinstance(v, str) for v in value]) and \
-                all([_is_binary(v) is False for v in value]):
+                all([is_binary(v) is False for v in value]):
             return {'SS': sorted(list(value))}
         else:
             raise ValueError('Can not mix types in a set')
@@ -94,24 +134,15 @@ def _marshall_value(value):
     raise ValueError('Unsupported type: %s' % type(value))
 
 
-def _encode_binary_set(value):
-    return sorted([base64.b64encode(v).decode('ascii') for v in value])
-
-
-
-def unmarshall(values):
+def _to_number(value):
     """
-    Transform a response payload from DynamoDB to a native dict
+    Convert the string containing a number to a number
 
-    :param dict values: The response payload from DynamoDB
-    :rtype: dict
-    :raises ValueError: if an unsupported type code is encountered
+    :param str value: The value to convert
+    :rtype: float|int
 
     """
-    unmarshalled = {}
-    for key in values:
-        unmarshalled[key] = _unmarshall_dict(values[key])
-    return unmarshalled
+    return float(value) if '.' in value else int(value)
 
 
 def _unmarshall_dict(value):
@@ -148,23 +179,3 @@ def _unmarshall_dict(value):
     raise ValueError('Unsupported value type: %s' % key)
 
 
-def _to_number(value):
-    """
-    Convert the string containing a number to a number
-
-    :param str value: The value to convert
-    :rtype: float|int
-
-    """
-    return float(value) if '.' in value else int(value)
-
-
-def _is_binary(value):
-    """
-    Check to see if a string contains binary data in Python2
-
-    :param str value: The value to check
-    :rtype: bool
-
-    """
-    return bool(value.translate(None, TEXT_CHARS))

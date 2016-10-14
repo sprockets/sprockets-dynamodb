@@ -1,5 +1,8 @@
+import collections
 import datetime
+import logging
 import os
+import random
 import socket
 import sys
 import uuid
@@ -8,12 +11,18 @@ import unittest
 import mock
 
 from tornado import concurrent
+from tornado import gen
 from tornado import httpclient
 from tornado import locks
 from tornado import testing
 from tornado_aws import exceptions as aws_exceptions
 
 import sprockets_dynamodb as dynamodb
+from sprockets_dynamodb import utils
+
+LOGGER = logging.getLogger(__name__)
+
+os.environ['ASYNC_TEST_TIMEOUT'] = '30'
 
 
 class AsyncTestCase(testing.AsyncTestCase):
@@ -23,6 +32,18 @@ class AsyncTestCase(testing.AsyncTestCase):
         self.client = self.get_client()
         self.client.set_error_callback(None)
         self.client.set_instrumentation_callback(None)
+
+    @gen.coroutine
+    def create_table(self, definition):
+        response = yield self.client.create_table(definition)
+        yield self.wait_on_table_creation(definition['TableName'], response)
+
+    @gen.coroutine
+    def wait_on_table_creation(self, table_name, response):
+        while not self._table_is_ready(response):
+            LOGGER.debug('Waiting on %s to become ready', table_name)
+            yield gen.sleep(1)
+            response = yield self.client.describe_table(table_name)
 
     @property
     def endpoint(self):
@@ -43,6 +64,54 @@ class AsyncTestCase(testing.AsyncTestCase):
 
     def get_client(self):
         return dynamodb.Client(endpoint=self.endpoint)
+
+    @staticmethod
+    def _table_is_ready(response):
+        LOGGER.debug('Is table ready? %r', response)
+        if response['TableStatus'] != dynamodb.TABLE_ACTIVE:
+            return False
+        for index in response.get('GlobalSecondaryIndexes', {}):
+            if index['IndexStatus'] != dynamodb.TABLE_ACTIVE:
+                return False
+        return True
+
+class AsyncItemTestCase(AsyncTestCase):
+
+    def setUp(self):
+        self.definition = self.generic_table_definition()
+        return super(AsyncItemTestCase, self).setUp()
+
+    def tearDown(self):
+        yield self.client.delete_table(self.definition['TableName'])
+        super(AsyncItemTestCase, self).tearDown()
+
+    def new_item_value(self):
+        return {
+            'id': str(uuid.uuid4()),
+            'created_at': datetime.datetime.utcnow(),
+            'value': str(uuid.uuid4())
+        }
+
+    def create_table(self, definition=None):
+        return super(AsyncItemTestCase, self).create_table(
+            definition or self.definition)
+
+    def delete_item(self, item_id):
+        return self.client.delete_item(self.definition['TableName'],
+                                       {'id': item_id},
+                                       return_consumed_capacity='TOTAL',
+                                       return_item_collection_metrics='SIZE',
+                                       return_values='ALL_OLD')
+
+    def get_item(self, item_id):
+        return self.client.get_item(self.definition['TableName'],
+                                    {'id': item_id})
+
+    def put_item(self, item):
+        return self.client.put_item(self.definition['TableName'], item,
+                                    return_consumed_capacity='TOTAL',
+                                    return_item_collection_metrics='SIZE',
+                                    return_values='ALL_OLD')
 
 
 class AWSClientTests(AsyncTestCase):
@@ -223,13 +292,10 @@ class CreateTableTests(AsyncTestCase):
     @testing.gen_test
     def test_double_create(self):
         definition = self.generic_table_definition()
-        response = yield self.client.create_table(definition)
-        self.assertEqual(response['TableName'], definition['TableName'])
-        self.assertIn(response['TableStatus'],
-                      [dynamodb.TABLE_ACTIVE,
-                       dynamodb.TABLE_CREATING])
+        yield self.create_table(definition)
         with self.assertRaises(dynamodb.ResourceInUse):
-            response = yield self.client.create_table(definition)
+            yield self.create_table(definition)
+        yield self.client.delete_table(definition['TableName'])
 
 
 class DeleteTableTests(AsyncTestCase):
@@ -237,8 +303,7 @@ class DeleteTableTests(AsyncTestCase):
     @testing.gen_test
     def test_delete_table(self):
         definition = self.generic_table_definition()
-        response = yield self.client.create_table(definition)
-        self.assertEqual(response['TableName'], definition['TableName'])
+        yield self.create_table(definition)
         yield self.client.delete_table(definition['TableName'])
         with self.assertRaises(dynamodb.ResourceNotFound):
             yield self.client.describe_table(definition['TableName'])
@@ -264,6 +329,8 @@ class DescribeTableTests(AsyncTestCase):
         self.assertEqual(response['TableName'], definition['TableName'])
         self.assertEqual(response['TableStatus'],
                          dynamodb.TABLE_ACTIVE)
+        # Delete the table
+        yield self.client.delete_table(definition['TableName'])
 
     @testing.gen_test
     def test_table_not_found(self):
@@ -289,62 +356,26 @@ class ListTableTests(AsyncTestCase):
         self.assertNotIn(definition['TableName'], response['TableNames'])
 
 
-class ItemLifecycleTests(AsyncTestCase):
-
-    def setUp(self):
-        self.definition = self.generic_table_definition()
-        return super(ItemLifecycleTests, self).setUp()
-
-    def tearDown(self):
-        yield self.client.delete_table(self.definition['TableName'])
-        return super(ItemLifecycleTests, self).setUp()
-
-
-    def _create_item(self):
-        return {
-            'id': str(uuid.uuid4()),
-            'created_at': datetime.datetime.utcnow(),
-            'value': str(uuid.uuid4())
-        }
-
-    def _create_table(self):
-        return self.client.create_table(self.definition)
-
-    def _delete_item(self, item_id):
-        return self.client.delete_item(self.definition['TableName'],
-                                       {'id': item_id},
-                                       return_consumed_capacity='TOTAL',
-                                       return_item_collection_metrics='SIZE',
-                                       return_values='ALL_OLD')
-
-    def _get_item(self, item_id):
-        return self.client.get_item(self.definition['TableName'],
-                                    {'id': item_id})
-
-    def _put_item(self, item):
-        return self.client.put_item(self.definition['TableName'], item,
-                                    return_consumed_capacity='TOTAL',
-                                    return_item_collection_metrics='SIZE',
-                                    return_values='ALL_OLD')
+class ItemLifecycleTests(AsyncItemTestCase):
 
     @testing.gen_test
     def test_item_lifecycle(self):
-        yield self._create_table()
+        yield self.create_table()
 
-        item = self._create_item()
+        item = self.new_item_value()
 
-        response = yield self._put_item(item)
+        response = yield self.put_item(item)
         self.assertIsNone(response)
 
-        response = yield self._get_item(item['id'])
+        response = yield self.get_item(item['id'])
         self.assertEqual(response['Item']['id'], item['id'])
 
         item['update_check'] = str(uuid.uuid4())
 
-        response = yield self._put_item(item)
+        response = yield self.put_item(item)
         self.assertEqual(response['Attributes']['id'], item['id'])
 
-        response = yield self._get_item(item['id'])
+        response = yield self.get_item(item['id'])
         self.assertEqual(response['Item']['id'], item['id'])
         self.assertEqual(response['Item']['update_check'],
                          item['update_check'])
@@ -367,9 +398,126 @@ class ItemLifecycleTests(AsyncTestCase):
         self.assertEqual(response['Attributes']['update_check'],
                          item['update_check'])
 
-        response = yield self._delete_item(item['id'])
+        response = yield self.delete_item(item['id'])
         self.assertEqual(response['Attributes']['id'], item['id'])
         self.assertEqual(response['Attributes']['update_check'], update_check)
 
-        response = yield self._get_item(item['id'])
+        response = yield self.get_item(item['id'])
         self.assertIsNone(response)
+
+
+class TableQueryTests(AsyncItemTestCase):
+
+    def setUp(self):
+        super(TableQueryTests, self).setUp()
+        self.common_counts = collections.Counter()
+        self.common_keys = []
+        for iteration in range(0, 5):
+            self.common_keys.append(str(uuid.uuid4()))
+
+    def new_item_value(self):
+        offset = random.randint(0, len(self.common_keys) - 1)
+        common_key = self.common_keys[offset]
+        self.common_counts[common_key] += 1
+        return {
+            'id': str(uuid.uuid4()),
+            'created_at': datetime.datetime.utcnow(),
+            'value': str(uuid.uuid4()),
+            'common': common_key
+        }
+
+    @staticmethod
+    def generic_table_definition():
+        return {
+            'TableName': str(uuid.uuid4()),
+            'AttributeDefinitions': [{'AttributeName': 'id',
+                                      'AttributeType': 'S'},
+                                     {'AttributeName': 'common',
+                                      'AttributeType': 'S'}],
+            'KeySchema': [{'AttributeName': 'id', 'KeyType': 'HASH'}],
+            'ProvisionedThroughput': {
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5
+            },
+            'GlobalSecondaryIndexes': [
+                {
+                    'IndexName': 'common',
+                    'KeySchema': [
+                        {'AttributeName': 'common', 'KeyType': 'HASH'}
+                    ],
+                    'ProvisionedThroughput': {
+                        'ReadCapacityUnits': 1,
+                        'WriteCapacityUnits': 1
+                    },
+                    'Projection': {'ProjectionType': 'ALL'}
+                }
+            ]
+        }
+
+    @testing.gen_test()
+    def test_query_on_common_key(self):
+        yield self.create_table()
+        for iteration in range(0, 10):
+            payload = {
+                'RequestItems': {
+                    self.definition['TableName']: [{
+                         'PutRequest': {
+                             'Item': utils.marshall(self.new_item_value())
+                         }
+                     } for _row in range(0, 25)]
+                },
+                'ReturnConsumedCapacity': 'TOTAL',
+                'ReturnItemCollectionMetrics': 'SIZE'
+            }
+            yield self.client.execute('BatchWriteItem', payload)
+
+        for key in self.common_keys:
+            items = []
+            kwargs = {
+                'index_name': 'common',
+                'key_condition_expression': '#common = :common',
+                'expression_attribute_names': {'#common': 'common'},
+                'expression_attribute_values': {':common': key},
+                'limit': 5
+            }
+            while True:
+                result = yield self.client.query(self.definition['TableName'],
+                                                 **kwargs)
+                items += result['Items']
+                if not result.get('LastEvaluatedKey'):
+                    break
+                kwargs['exclusive_start_key'] = result['LastEvaluatedKey']
+            self.assertEqual(len(items), self.common_counts[key])
+
+
+class TableScanTests(AsyncItemTestCase):
+
+    @testing.gen_test()
+    def test_query_on_common_key(self):
+        yield self.create_table()
+        for iteration in range(0, 10):
+            payload = {
+                'RequestItems': {
+                    self.definition['TableName']: [{
+                         'PutRequest': {
+                             'Item': utils.marshall(self.new_item_value())
+                         }
+                     } for _row in range(0, 25)]
+                },
+                'ReturnConsumedCapacity': 'TOTAL',
+                'ReturnItemCollectionMetrics': 'SIZE'
+            }
+            yield self.client.execute('BatchWriteItem', payload)
+
+        items = []
+        kwargs = {
+            'limit': 5
+        }
+        while True:
+            result = yield self.client.scan(self.definition['TableName'],
+                                            **kwargs)
+            items += result['Items']
+            if not result.get('LastEvaluatedKey'):
+                break
+            kwargs['exclusive_start_key'] = result['LastEvaluatedKey']
+        self.assertEqual(len(items), 250)

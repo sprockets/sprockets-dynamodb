@@ -1,5 +1,6 @@
 import base64
 import datetime
+import sys
 import unittest
 import uuid
 
@@ -15,6 +16,17 @@ class UTC(datetime.tzinfo):
 
     def dst(self, dt):
         return datetime.timedelta(0)
+
+
+class IsBinaryTests(unittest.TestCase):
+
+    @unittest.skipIf(sys.version_info.major > 2, 'is_binary is Python2 only')
+    def test_is_binary_true(self):
+        self.assertTrue(utils.is_binary('\0x01\0x02\0x03'))
+
+    @unittest.skipIf(sys.version_info.major > 2, 'is_binary is Python2 only')
+    def test_is_binary_false(self):
+        self.assertFalse(utils.is_binary('This is ASCII'))
 
 
 class MarshallTests(unittest.TestCase):

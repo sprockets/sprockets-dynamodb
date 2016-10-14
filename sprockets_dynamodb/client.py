@@ -7,7 +7,7 @@ import collections
 import json
 import logging
 import os
-import select
+import select as _select
 import socket
 import ssl
 import time
@@ -21,7 +21,7 @@ from sprockets_dynamodb import exceptions, utils
 # Stub Python3 exceptions for Python 2.7
 try:
     ConnectionError
-except NameError:
+except NameError:  # pragma: nocover
     class ConnectionError(Exception):
         pass
 
@@ -771,24 +771,6 @@ class Client(object):
     def batch_get_item(self):
         """Invoke the `BatchGetItem`_ function.
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _BatchGetItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_BatchGetItem.html
 
@@ -798,36 +780,25 @@ class Client(object):
     def batch_write_item(self):
         """Invoke the `BatchWriteItem`_ function.
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _BatchWriteItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_BatchWriteItem.html
 
         """
         raise NotImplementedError
 
-    def query(self, table_name, consistent_read=False,
-              exclusive_start_key=None, expression_attribute_names=None,
-              expression_attribute_values=None, filter_expression=None,
-              projection_expression=None, index_name=None,limit=None,
-              return_consumed_capacity=None, scan_index_forward=True,
-              select=None):
+    def query(self, table_name,
+              index_name=None,
+              consistent_read=None,
+              key_condition_expression=None,
+              filter_expression=None,
+              expression_attribute_names=None,
+              expression_attribute_values=None,
+              projection_expression=None,
+              select=None,
+              exclusive_start_key=None,
+              limit=None,
+              scan_index_forward=True,
+              return_consumed_capacity=None):
         """A `Query`_ operation uses the primary key of a table or a secondary
         index to directly access items from that table or index.
 
@@ -861,7 +832,7 @@ class Client(object):
             you query a global secondary index with ``consistent_read`` set to
             ``True``, you will receive a
             :exc:`~sprockets_dynamodb.exceptions.ValidationException`.
-        :param str|bytes|int exclusive_start_key: The primary key of the first
+        :param dict exclusive_start_key: The primary key of the first
             item that this operation will evaluate. Use the value that was
             returned for ``LastEvaluatedKey`` in the previous operation. In a
             parallel scan, a *Scan* request that includes
@@ -948,35 +919,53 @@ class Client(object):
                 the matching items themselves.
         :rtype: dict
 
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
-
         .. _Query: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_Query.html
 
         """
-        raise NotImplementedError
+        payload = {'TableName': table_name,
+                   'ScanIndexForward': scan_index_forward}
+        if index_name:
+            payload['IndexName'] = index_name
+        if consistent_read is not None:
+            payload['ConsistentRead'] = consistent_read
+        if key_condition_expression:
+            payload['KeyConditionExpression'] = key_condition_expression
+        if filter_expression:
+            payload['FilterExpression'] = filter_expression
+        if expression_attribute_names:
+            payload['ExpressionAttributeNames'] = expression_attribute_names
+        if expression_attribute_values:
+            payload['ExpressionAttributeValues'] = \
+                utils.marshall(expression_attribute_values)
+        if projection_expression:
+            payload['ProjectionExpression'] = projection_expression
+        if select:
+            _validate_select(select)
+            payload['Select'] = select
+        if exclusive_start_key:
+            payload['ExclusiveStartKey'] = utils.marshall(exclusive_start_key)
+        if limit:
+            payload['Limit'] = limit
+        if return_consumed_capacity:
+            _validate_return_consumed_capacity(return_consumed_capacity)
+            payload['ReturnConsumedCapacity'] = return_consumed_capacity
+        return self.execute('Query', payload)
 
-    def scan(self, table_name, consistent_read=False, exclusive_start_key=None,
-             expression_attribute_names=None, expression_attribute_values=None,
-             filter_expression=None, projection_expression=None,
-             index_name=None, limit=None, return_consumed_capacity=None,
-             segment=None, total_segments=None):
+    def scan(self,
+             table_name,
+             index_name=None,
+             consistent_read=None,
+             projection_expression=None,
+             filter_expression=None,
+             expression_attribute_names=None,
+             expression_attribute_values=None,
+             segment=None,
+             total_segments=None,
+             select=None,
+             limit=None,
+             exclusive_start_key=None,
+             return_consumed_capacity=None):
         """The `Scan`_ operation returns one or more items and item attributes
         by accessing every item in a table or a secondary index.
 
@@ -1000,141 +989,41 @@ class Client(object):
         you need a consistent copy of the data, as of the time that the *Scan*
         begins, you can set the ``consistent_read`` parameter to ``True``.
 
-        :param str table_name: The name of the table containing the requested
-            items; or, if you provide IndexName, the name of the table to which
-            that index belongs.
-        :param bool consistent_read: A Boolean value that determines the read
-            consistency model during the scan:
-
-            - If set to ``False``, then the data returned from *Scan* might not
-              contain the results from other recently completed write
-              operations (*PutItem*, *UpdateItem*, or *DeleteItem*).
-            - If set to ``True``, then all of the write operations that
-              completed before the Scan began are guaranteed to be contained in
-              the *Scan* response.
-
-            The default setting is ``False``.
-
-            This parameter is not supported on global secondary indexes. If you
-            scan a global secondary index and set ``consistent_read`` to
-            ``true``, you will receive a
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`.
-        :param str|bytes|int exclusive_start_key: The primary key of the first
-            item that this operation will evaluate. Use the value that was
-            returned for ``LastEvaluatedKey`` in the previous operation.
-
-            In a parallel scan, a *Scan* request that includes
-            ``exclusive_start_key`` must specify the same segment whose
-            previous *Scan* returned the corresponding value of
-            ``LastEvaluatedKey``.
-        :param dict expression_attribute_names: One or more substitution tokens
-            for attribute names in an expression.
-        :param dict expression_attribute_values: One or more values that can be
-            substituted in an expression.
-        :param str filter_expression: A string that contains conditions that
-            DynamoDB applies after the Scan operation, but before the data is
-            returned to you. Items that do not satisfy the expression criteria
-            are not returned.
-
-            .. note:: A filter expression is applied after the items have
-                already been read; the process of filtering does not consume
-                any additional read capacity units.
-
-            For more information, see `Filter Expressions <http://docs.aws.
-            amazon.com/amazondynamodb/latest/developerguide/QueryAndScan.html
-            #FilteringResults>`_ in the Amazon DynamoDB Developer Guide.
-        :param str projection_expression: A string that identifies one or more
-            attributes to retrieve from the specified table or index. These
-            attributes can include scalars, sets, or elements of a JSON
-            document. The attributes in the expression must be separated by
-            commas.
-
-            If no attribute names are specified, then all attributes will be
-            returned. If any of the requested attributes are not found, they
-            will not appear in the result.
-
-            For more information, see `Accessing Item Attributes <http://docs.
-            aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.
-            AccessingItemAttributes.html>`_ in the Amazon DynamoDB Developer
-            Guide.
-        :param str index_name: The name of a secondary index to scan. This
-            index can be any local secondary index or global secondary index.
-            Note that if you use this parameter, you must also provide
-            ``table_name``.
-        :param int limit: The maximum number of items to evaluate (not
-            necessarily the number of matching items). If DynamoDB processes
-            the number of items up to the limit while processing the results,
-            it stops the operation and returns the matching values up to that
-            point, and a key in ``LastEvaluatedKey`` to apply in a subsequent
-            operation, so that you can pick up where you left off. Also, if the
-            processed data set size exceeds 1 MB before DynamoDB reaches this
-            limit, it stops the operation and returns the matching values up to
-            the limit, and a key in ``LastEvaluatedKey`` to apply in a
-            subsequent operation to continue the operation. For more
-            information, see `Query and Scan <http://docs.aws.amazon.com/amazo
-            ndynamodb/latest/developerguide/QueryAndScan.html>`_ in the Amazon
-            DynamoDB Developer Guide.
-        :param str return_consumed_capacity: Determines the level of detail
-            about provisioned throughput consumption that is returned in the
-            response. Should be ``None`` or one of ``INDEXES`` or ``TOTAL``
-        :param int segment: For a parallel *Scan* request, ``segment``
-            identifies an individual segment to be scanned by an application
-            worker.
-
-            Segment IDs are zero-based, so the first segment is always ``0``.
-            For example, if you want to use four application threads to scan a
-            table or an index, then the first thread specifies a Segment value
-            of ``0``, the second thread specifies ``1``, and so on.
-
-            The value of ``LastEvaluatedKey`` returned from a parallel *Scan*
-            request must be used as ``ExclusiveStartKey`` with the same segment
-            ID in a subsequent *Scan* operation.
-
-            The value for ``segment`` must be greater than or equal to ``0``,
-            and less than the value provided for ``total_segments``.
-
-            If you provide ``segment``, you must also provide
-            ``total_segments``.
-        :param int total_segments: For a parallel *Scan* request,
-            ``total_segments`` represents the total number of segments into
-            which the *Scan* operation will be divided. The value of
-            ``total_segments`` corresponds to the number of application workers
-            that will perform the parallel scan. For example, if you want to
-            use four application threads to scan a table or an index, specify a
-            ``total_segments`` value of 4.
-
-            The value for ``total_segments`` must be greater than or equal to
-            ``1``, and less than or equal to ``1000000``. If you specify a
-            ``total_segments`` value of ``1``, the *Scan* operation will be
-            sequential rather than parallel.
-
-            If you specify ``total_segments``, you must also specify
-            ``segments``.
         :rtype: dict
-
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         .. _Scan: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_Scan.html
 
         """
-        raise NotImplementedError
+        payload = {'TableName': table_name}
+        if index_name:
+            payload['IndexName'] = index_name
+        if consistent_read is not None:
+            payload['ConsistentRead'] = consistent_read
+        if filter_expression:
+            payload['FilterExpression'] = filter_expression
+        if expression_attribute_names:
+            payload['ExpressionAttributeNames'] = expression_attribute_names
+        if expression_attribute_values:
+            payload['ExpressionAttributeValues'] = \
+                utils.marshall(expression_attribute_values)
+        if projection_expression:
+            payload['ProjectionExpression'] = projection_expression
+        if segment:
+            payload['Segment'] = segment
+        if total_segments:
+            payload['TotalSegments'] = total_segments
+        if select:
+            _validate_select(select)
+            payload['Select'] = select
+        if exclusive_start_key:
+            payload['ExclusiveStartKey'] = utils.marshall(exclusive_start_key)
+        if limit:
+            payload['Limit'] = limit
+        if return_consumed_capacity:
+            _validate_return_consumed_capacity(return_consumed_capacity)
+            payload['ReturnConsumedCapacity'] = return_consumed_capacity
+        return self.execute('Scan', payload)
 
     @gen.coroutine
     def execute(self, action, parameters):
@@ -1171,6 +1060,7 @@ class Client(object):
 
         """
         result = yield self._execute_action(action, parameters)
+        self.logger.debug('%s result: %r', action, result)
         raise gen.Return(_unwrap_result(action, result))
 
     @gen.coroutine
@@ -1208,7 +1098,7 @@ class Client(object):
         :param method callback: The method to invoke
 
         """
-        LOGGER.debug('Setting error callback: %r', callback)
+        self.logger.debug('Setting error callback: %r', callback)
         self._on_error = callback
 
     def set_instrumentation_callback(self, callback):
@@ -1218,7 +1108,7 @@ class Client(object):
         :param method callback: The method to invoke
 
         """
-        LOGGER.debug('Setting instrumentation callback: %r', callback)
+        self.logger.debug('Setting instrumentation callback: %r', callback)
         self._instrumentation_callback = callback
 
     def _execute(self, action, parameters, attempt, measurements):
@@ -1248,7 +1138,6 @@ class Client(object):
             :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
-        LOGGER.debug('%s %r', action, parameters)
         future = concurrent.TracebackFuture()
         start = time.time()
 
@@ -1274,7 +1163,7 @@ class Client(object):
         except aws_exceptions.NoProfileError as error:
             future.set_exception(exceptions.NoProfileError(str(error)))
         except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
-                select.error, ssl.socket_error, socket.gaierror) as error:
+                _select.error, ssl.socket_error, socket.gaierror) as error:
             future.set_exception(exceptions.RequestException(str(error)))
         except TimeoutError:
             future.set_exception(exceptions.TimeoutException())
@@ -1316,7 +1205,7 @@ class Client(object):
         :param list measurements: The measurement accumulator
 
         """
-        self.logger.debug('processing %s(%s) #%i = %r',
+        self.logger.debug('%s on %s request #%i = %r',
                           action, table, attempt, response)
         now, error, result = time.time(), None, None
         try:
@@ -1381,7 +1270,6 @@ def _unwrap_result(action, result):
     :rtype: list or dict
 
     """
-    LOGGER.debug('%s Result: %r', action, result)
     if not result:
         return
     elif action in ['DeleteItem', 'PutItem', 'UpdateItem']:
@@ -1407,7 +1295,6 @@ def _unwrap_delete_put_update_item(result):
                 result['ItemCollectionMetrics'].get('SizeEstimateRangeGB',
                                                     [None]).pop()
         }
-    LOGGER.debug('DELETE: %r', response)
     return response
 
 
@@ -1423,11 +1310,14 @@ def _unwrap_get_item(result):
 def _unwrap_query_scan(result):
     response = {
         'Count': result.get('Count', 0),
-        'Items': [utils.unmarshall(i) for i in result.get('Items', [])]
+        'Items': [utils.unmarshall(i) for i in result.get('Items', [])],
+        'ScannedCount': result.get('ScannedCount', 0)
     }
-    for key in ['ConsumedCapacity', 'LastEvaluatedKey', 'ScannedCount']:
-        if key in result:
-            response[key] = result[key]
+    if 'LastEvaluatedKey' in result:
+        response['LastEvaluatedKey'] = \
+            utils.unmarshall(result['LastEvaluatedKey'])
+    if 'ConsumedCapacity' in result:
+        response['ConsumedCapacity'] = result['ConsumedCapacity']
     return response
 
 
@@ -1445,3 +1335,9 @@ def _validate_return_values(value):
     if value not in ['NONE', 'ALL_NEW', 'ALL_OLD',
                      'UPDATED_NEW', 'UPDATED_OLD']:
         raise ValueError('Invalid return_values value')
+
+
+def _validate_select(value):
+    if value not in ['ALL_ATTRIBUTES', 'ALL_PROJECTED_ATTRIBUTES', 'COUNT',
+                     'SPECIFIC_ATTRIBUTES']:
+        raise ValueError('Invalid select value')

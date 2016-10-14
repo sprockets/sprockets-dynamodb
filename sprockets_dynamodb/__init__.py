@@ -4,30 +4,31 @@ Sprockets DynamoDB
 
 """
 import logging
+try:
+    from sprockets_dynamodb.client import Client
+except ImportError:   # pragma: nocover
+    Client = None
+try:
+    from sprockets_dynamodb.mixin import DynamoDBMixin
+except ImportError:  # pragma: nocover
+    DynamoDBMixin = None
+
+try:
+    from sprockets_dynamodb.exceptions import *
+except ImportError:  # pragma: nocover
+    pass
 
 version_info = (2, 0, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-try:
-    from sprockets_dynamodb.client import Client
-except ImportError:
-    Client = None
-try:
-    from sprockets_dynamodb.mixin import DynamoDBMixin
-except ImportError:
-    DynamoDBMixin = None
-
-from sprockets_dynamodb.exceptions import *
-
-# Response constants
+# Table status constants
 TABLE_ACTIVE = 'ACTIVE'
 TABLE_CREATING = 'CREATING'
 TABLE_DELETING = 'DELETING'
 TABLE_DISABLED = 'DISABLED'
 TABLE_UPDATING = 'UPDATING'
-
 
 __all__ = [
     'client',
