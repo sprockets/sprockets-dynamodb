@@ -26,8 +26,7 @@ class DynamoDBMixin(object):
             self.application.dynamodb.set_instrumentation_callback(
                 self._record_dynamodb_execution)
 
-    @staticmethod
-    def _on_dynamodb_exception(error):
+    def _on_dynamodb_exception(self, error):
         """Dynamically handle DynamoDB exceptions, returning HTTP error
         responses.
 
@@ -39,9 +38,12 @@ class DynamoDBMixin(object):
         elif isinstance(error, (exceptions.ThroughputExceeded,
                                 exceptions.ThrottlingException)):
             raise web.HTTPError(429, reason='Too Many Requests')
+        if hasattr(self, 'logger'):
+            self.logger.error('DynamoDB Error: %s', error)
         raise web.HTTPError(500, reason=str(error))
 
-    def _record_dynamodb_execution(self, measurements):
+    @staticmethod
+    def _record_dynamodb_execution(measurements):
         for row in measurements:
             measurement = influxdb.Measurement(INFLUXDB_DATABASE,
                                                INFLUXDB_MEASUREMENT)
@@ -49,12 +51,7 @@ class DynamoDBMixin(object):
             measurement.set_tag('action', row.action)
             measurement.set_tag('table', row.table)
             measurement.set_tag('attempt', row.attempt)
-            for key in {'SERVICE', 'ENVIRONMENT'}:
-                if os.environ.get(key):
-                    measurement.set_tag(key.lower(), os.environ[key])
             if row.error:
                 measurement.set_tag('error', row.error)
-            if hasattr(self, 'correlation_id'):
-                measurement.set_field('correlation_id', self.correlation_id)
             measurement.set_field('duration', row.duration)
             influxdb.add_measurement(measurement)
