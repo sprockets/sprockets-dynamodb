@@ -33,9 +33,10 @@ except NameError:  # pragma: nocover
 
 
 LOGGER = logging.getLogger(__name__)
-Measurement = collections.namedtuple('Measurement', ['timestamp', 'action',
-                                                     'table', 'attempt',
-                                                     'duration', 'error'])
+
+Measurement = collections.namedtuple(
+    'Measurement',
+    ['timestamp', 'action', 'table', 'attempt', 'duration', 'error'])
 
 
 class Client(object):
@@ -100,9 +101,10 @@ class Client(object):
         if os.environ.get('DYNAMODB_ENDPOINT', None):
             kwargs.setdefault('endpoint', os.environ['DYNAMODB_ENDPOINT'])
         self._client = tornado_aws.AsyncAWSClient('dynamodb', **kwargs)
-        self._max_retries = kwargs.get('max_retries',
-                                       os.environ.get('DYNAMODB_MAX_RETRIES',
-                                                      self.DEFAULT_MAX_RETRIES))
+        self._ioloop = kwargs.get('io_loop', ioloop.IOLoop.current())
+        self._max_retries = kwargs.get(
+            'max_retries', os.environ.get(
+                'DYNAMODB_MAX_RETRIES', self.DEFAULT_MAX_RETRIES))
         self._instrumentation_callback = kwargs.get('instrumentation_callback')
         self._on_error = kwargs.get('on_error_callback')
 
@@ -117,22 +119,8 @@ class Client(object):
         .. _CreateTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_CreateTable.html
 
-        :raises:
-
-
         """
-        future = concurrent.TracebackFuture()
-
-        def handle_response(response):
-            exception = response.exception()
-            if exception:
-                future.set_exception(exception)
-            else:
-                future.set_result(response.result()['TableDescription'])
-
-        aws_response = self.execute('CreateTable', table_definition)
-        ioloop.IOLoop.current().add_future(aws_response, handle_response)
-        return future
+        return self.execute('CreateTable', table_definition)
 
     def update_table(self, table_definition):
         """
@@ -179,80 +167,6 @@ class Client(object):
 
         :param str table_name: name of the table to describe.
         :rtype: tornado.concurrent.Future
-        :returns: Response Format:
-
-            .. code:: json
-
-                {
-                  "AttributeDefinitions": [{
-                    "AttributeName": "string",
-                    "AttributeType": "string"
-                  }],
-                  "CreationDateTime": number,
-                  "GlobalSecondaryIndexes": [{
-                    "Backfilling": boolean,
-                    "IndexArn": "string",
-                    "IndexName": "string",
-                    "IndexSizeBytes": number,
-                    "IndexStatus": "string",
-                    "ItemCount": number,
-                    "KeySchema": [{
-                      "AttributeName": "string",
-                      "KeyType": "string"
-                    }],
-                    "Projection": {
-                      "NonKeyAttributes": [
-                        "string"
-                      ],
-                      "ProjectionType": "string"
-                    },
-                    "ProvisionedThroughput": {
-                      "LastDecreaseDateTime": number,
-                      "LastIncreaseDateTime": number,
-                      "NumberOfDecreasesToday": number,
-                      "ReadCapacityUnits": number,
-                      "WriteCapacityUnits": number
-                    }
-                  }],
-                  "ItemCount": number,
-                  "KeySchema": [{
-                    "AttributeName": "string",
-                    "KeyType": "string"
-                  }],
-                  "LatestStreamArn": "string",
-                  "LatestStreamLabel": "string",
-                  "LocalSecondaryIndexes": [{
-                    "IndexArn": "string",
-                    "IndexName": "string",
-                    "IndexSizeBytes": number,
-                    "ItemCount": number,
-                    "KeySchema": [{
-                      "AttributeName": "string",
-                      "KeyType": "string"
-                    }],
-                    "Projection": {
-                      "NonKeyAttributes": [
-                        "string"
-                      ],
-                      "ProjectionType": "string"
-                    }
-                  }],
-                  "ProvisionedThroughput": {
-                    "LastDecreaseDateTime": number,
-                    "LastIncreaseDateTime": number,
-                    "NumberOfDecreasesToday": number,
-                    "ReadCapacityUnits": number,
-                    "WriteCapacityUnits": number
-                  },
-                  "StreamSpecification": {
-                    "StreamEnabled": boolean,
-                    "StreamViewType": "string"
-                  },
-                  "TableArn": "string",
-                  "TableName": "string",
-                  "TableSizeBytes": number,
-                  "TableStatus": "string"
-                }
 
         .. _DeleteTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DeleteTable.html
@@ -266,97 +180,12 @@ class Client(object):
 
         :param str table_name: name of the table to describe.
         :rtype: tornado.concurrent.Future
-        :returns: Response Format:
-
-            .. code:: json
-
-                {
-                  "AttributeDefinitions": [{
-                    "AttributeName": "string",
-                    "AttributeType": "string"
-                  }],
-                  "CreationDateTime": number,
-                  "GlobalSecondaryIndexes": [{
-                    "Backfilling": boolean,
-                    "IndexArn": "string",
-                    "IndexName": "string",
-                    "IndexSizeBytes": number,
-                    "IndexStatus": "string",
-                    "ItemCount": number,
-                    "KeySchema": [{
-                      "AttributeName": "string",
-                      "KeyType": "string"
-                    }],
-                    "Projection": {
-                      "NonKeyAttributes": [
-                        "string"
-                      ],
-                      "ProjectionType": "string"
-                    },
-                    "ProvisionedThroughput": {
-                      "LastDecreaseDateTime": number,
-                      "LastIncreaseDateTime": number,
-                      "NumberOfDecreasesToday": number,
-                      "ReadCapacityUnits": number,
-                      "WriteCapacityUnits": number
-                    }
-                  }],
-                  "ItemCount": number,
-                  "KeySchema": [{
-                    "AttributeName": "string",
-                    "KeyType": "string"
-                  }],
-                  "LatestStreamArn": "string",
-                  "LatestStreamLabel": "string",
-                  "LocalSecondaryIndexes": [{
-                    "IndexArn": "string",
-                    "IndexName": "string",
-                    "IndexSizeBytes": number,
-                    "ItemCount": number,
-                    "KeySchema": [{
-                      "AttributeName": "string",
-                      "KeyType": "string"
-                    }],
-                    "Projection": {
-                      "NonKeyAttributes": [
-                        "string"
-                      ],
-                      "ProjectionType": "string"
-                    }
-                  }],
-                  "ProvisionedThroughput": {
-                    "LastDecreaseDateTime": number,
-                    "LastIncreaseDateTime": number,
-                    "NumberOfDecreasesToday": number,
-                    "ReadCapacityUnits": number,
-                    "WriteCapacityUnits": number
-                  },
-                  "StreamSpecification": {
-                    "StreamEnabled": boolean,
-                    "StreamViewType": "string"
-                  },
-                  "TableArn": "string",
-                  "TableName": "string",
-                  "TableSizeBytes": number,
-                  "TableStatus": "string"
-                }
 
         .. _DescribeTable: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DescribeTable.html
 
         """
-        future = concurrent.TracebackFuture()
-
-        def handle_response(response):
-            exception = response.exception()
-            if exception:
-                future.set_exception(exception)
-            else:
-                future.set_result(response.result()['Table'])
-
-        aws_response = self.execute('DescribeTable', {'TableName': table_name})
-        ioloop.IOLoop.current().add_future(aws_response, handle_response)
-        return future
+        return self.execute('DescribeTable', {'TableName': table_name})
 
     def list_tables(self, exclusive_start_table_name=None, limit=None):
         """
@@ -372,16 +201,6 @@ class Client(object):
             obtain the next page of results.
         :param int limit: A maximum number of table names to return. If this
             parameter is not specified, the limit is ``100``.
-        :returns: Response Format:
-
-            .. code:: json
-
-                {
-                  "LastEvaluatedTableName": "string",
-                  "TableNames": [
-                    "string"
-                  ]
-                }
 
         .. _ListTables: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_ListTables.html
@@ -408,28 +227,6 @@ class Client(object):
         put operation (add a new item if one with the specified primary key
         doesn't exist), or replace an existing item if it has certain attribute
         values.
-
-        In addition to putting an item, you can also return the item's
-        attribute values in the same operation, using the ``return_values``
-        parameter.
-
-        When you add an item, the primary key attribute(s) are the only
-        required attributes. Attribute values cannot be null. String and Binary
-        type attributes must have lengths greater than zero. Set type
-        attributes cannot be empty. Requests with empty values will be rejected
-        with a
-        :exc:`~sprockets_dynamodb.exceptions.ValidationException`.
-
-        You can request that PutItem return either a copy of the original item
-        (before the update) or a copy of the updated item (after the update).
-        For more information, see the ReturnValues description below.
-
-        .. note:: To prevent a new item from replacing an existing item, use a
-            conditional expression that contains the attribute_not_exists
-            function with the name of the attribute being used as the partition
-            key for the table. Since every record must contain that attribute,
-            the attribute_not_exists function will only succeed if no matching
-            item exists.
 
         For more information about using this API, see Working with Items in
         the Amazon DynamoDB Developer Guide.
@@ -598,8 +395,7 @@ class Client(object):
             updated. See the `AWS documentation for ReturnValues <http://docs.
             aws.amazon.com/amazondynamodb/latest/APIReference/
             API_UpdateItem.html#DDB-UpdateItem-request-ReturnValues>`_
-
-        :rtype: dict
+        :rtype: tornado.concurrent.Future
 
         .. _UpdateItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_UpdateItem.html
@@ -640,18 +436,6 @@ class Client(object):
         that deletes the item if it exists, or if it has an expected attribute
         value.
 
-        In addition to deleting an item, you can also return the item's
-        attribute values in the same operation, using the ``return_values``
-        parameter.
-
-        Unless you specify conditions, the *DeleteItem* is an idempotent
-        operation; running it multiple times on the same item or attribute does
-        not result in an error response.
-
-        Conditional deletes are useful for deleting items only if specific
-        conditions are met. If those conditions are met, DynamoDB performs the
-        delete. Otherwise, the item is not deleted.
-
         :param str table_name: The name of the table from which to delete the
             item.
         :param dict key_dict: A map of attribute names to ``AttributeValue``
@@ -685,63 +469,6 @@ class Client(object):
             collection metrics are returned.
         :param str return_values: Return the item attributes as they appeared
             before they were deleted.
-        :returns: Response format:
-
-            .. code:: json
-
-                {
-                  "Attributes": {
-                    "key": "value"
-                  },
-                  "ConsumedCapacity": {
-                    "CapacityUnits": number,
-                    "GlobalSecondaryIndexes": {
-                      "string": {
-                        "CapacityUnits": number
-                      }
-                    },
-                    "LocalSecondaryIndexes": {
-                      "string": {
-                        "CapacityUnits": number
-                      }
-                    },
-                    "Table": {
-                      "CapacityUnits": number
-                    },
-                    "TableName": "string"
-                  },
-                  "ItemCollectionMetrics": {
-                    "ItemCollectionKey": {
-                      "string": {
-                        "B": blob,
-                        "BOOL": boolean,
-                        "BS": [
-                          blob
-                        ],
-                        "L": [
-                          AttributeValue
-                        ],
-                        "M": {
-                          "string": AttributeValue
-                        },
-                        "N": "string",
-                        "NS": [
-                          "string"
-                        ],
-                        "NULL": boolean,
-                        "S": "string",
-                        "SS": [
-                          "string"
-                        ]
-                      }
-                    },
-                    "SizeEstimateRangeGB": [
-                      number
-                    ]
-                  }
-                }
-
-            :exc:`ValueError`
 
         .. _DeleteItem: http://docs.aws.amazon.com/amazondynamodb/
            latest/APIReference/API_DeleteItem.html
@@ -801,27 +528,6 @@ class Client(object):
               return_consumed_capacity=None):
         """A `Query`_ operation uses the primary key of a table or a secondary
         index to directly access items from that table or index.
-
-        You can use the ``scan_index_forward`` parameter to get results in
-        forward or reverse order, by sort key.
-
-        Queries that do not return results consume the minimum number of read
-        capacity units for that type of read operation.
-
-        If the total number of items meeting the query criteria exceeds the
-        result set size limit of 1 MB, the query stops and results are returned
-        to the user with the ``LastEvaluatedKey`` element to continue the query
-        in a subsequent operation. Unlike a *Scan* operation, a Query operation
-        never returns both an empty result set and a ``LastEvaluatedKey``
-        value. ``LastEvaluatedKey`` is only provided if the results exceed
-        1 MB, or if you have used the ``limit`` parameter.
-
-        You can query a table, a local secondary index, or a global secondary
-        index. For a query on a table or on a local secondary index, you can
-        set the ``consistent_read`` parameter to true and obtain a strongly
-        consistent result. Global secondary indexes support eventually
-        consistent reads only, so do not specify ``consistent_read`` when
-        querying a global secondary index.
 
         :param str table_name: The name of the table containing the requested
             items.
@@ -1119,23 +825,6 @@ class Client(object):
         :param int attempt: Which attempt number this is
         :param list measurements: A list for accumulating request measurements
         :rtype: tornado.concurrent.Future
-        :raises:
-            :exc:`~sprockets_dynamodb.exceptions.DynamoDBException`
-            :exc:`~sprockets_dynamodb.exceptions.ConfigNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.NoCredentialsError`
-            :exc:`~sprockets_dynamodb.exceptions.NoProfileError`
-            :exc:`~sprockets_dynamodb.exceptions.TimeoutException`
-            :exc:`~sprockets_dynamodb.exceptions.RequestException`
-            :exc:`~sprockets_dynamodb.exceptions.InternalFailure`
-            :exc:`~sprockets_dynamodb.exceptions.LimitExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.MissingParameter`
-            :exc:`~sprockets_dynamodb.exceptions.OptInRequired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceInUse`
-            :exc:`~sprockets_dynamodb.exceptions.RequestExpired`
-            :exc:`~sprockets_dynamodb.exceptions.ResourceNotFound`
-            :exc:`~sprockets_dynamodb.exceptions.ServiceUnavailable`
-            :exc:`~sprockets_dynamodb.exceptions.ThroughputExceeded`
-            :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
         future = concurrent.TracebackFuture()
@@ -1252,13 +941,14 @@ class Client(object):
 
     @staticmethod
     def _sleep_duration(attempt):
-        """Calculates how long to sleep between retriable exceptions.
+        """Calculates how long to sleep between exceptions. Returns a value
+        in seconds.
 
         :param int attempt: The attempt number
         :rtype: float
 
         """
-        return (10 ** attempt) / 1000
+        return (float(2 ** attempt) * 100) / 1000
 
 
 def _unwrap_result(action, result):
@@ -1267,17 +957,21 @@ def _unwrap_result(action, result):
     :param str action: The action name
     :param result: The result of the action
     :type: result: list or dict
-    :rtype: list or dict
+    :rtype: dict | None
 
     """
     if not result:
         return
-    elif action in ['DeleteItem', 'PutItem', 'UpdateItem']:
+    elif action in {'DeleteItem', 'PutItem', 'UpdateItem'}:
         return _unwrap_delete_put_update_item(result)
     elif action == 'GetItem':
         return _unwrap_get_item(result)
     elif action == 'Query' or action == 'Scan':
         return _unwrap_query_scan(result)
+    elif action == 'CreateTable':
+        return _unwrap_create_table(result)
+    elif action == 'DescribeTable':
+        return _unwrap_describe_table(result)
     return result
 
 
@@ -1319,6 +1013,14 @@ def _unwrap_query_scan(result):
     if 'ConsumedCapacity' in result:
         response['ConsumedCapacity'] = result['ConsumedCapacity']
     return response
+
+
+def _unwrap_create_table(result):
+    return result['TableDescription']
+
+
+def _unwrap_describe_table(result):
+    return result['Table']
 
 
 def _validate_return_consumed_capacity(value):
