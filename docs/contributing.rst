@@ -9,7 +9,7 @@ Set up a development environment
 The first thing that you need is a development environment so that you can
 run the test suite, update the documentation, and everything else that is
 involved in contributing.  The easiest way to do that is to create a virtual
-environment for your endevours::
+environment for your endeavours::
 
    $ python3 -mvenv env
 
@@ -74,17 +74,17 @@ supported python versions in parallel.  This is essentially what Travis-CI
 will do when you issue a pull request anyway::
 
    $ env/bin/tox
-   py27 recreate: /.../sprockets.clients.dynamodb/build/tox/py27
-   GLOB sdist-make: /.../sprockets.clients.dynamodb/setup.py
-   py34 recreate: /.../sprockets.clients.dynamodb/build/tox/py34
+   py27 recreate: /.../sprockets-dynamodb/build/tox/py27
+   GLOB sdist-make: /.../sprockets-dynamodb/setup.py
+   py34 recreate: /.../sprockets-dynamodb/build/tox/py34
    py27 installdeps: -rtest-requirements.txt, mock
    py34 installdeps: -rtest-requirements.txt
-   py27 inst: /.../sprockets.clients.dynamodb/build/tox/dist/sprockets.clients.dynamodb-0.0.0.zip
+   py27 inst: /.../sprockets-dynamodb/build/tox/dist/sprockets-dynamodb-0.0.0.zip
    py27 runtests: PYTHONHASHSEED='2156646470'
-   py27 runtests: commands[0] | /../sprockets.clients.dynamodb/build/tox/py27/bin/nosetests
-   py34 inst: /../sprockets.clients.dynamodb/.build/tox/dist/sprockets.clients.dynamodb-0.0.0.zip
+   py27 runtests: commands[0] | /../sprockets-dynamodb/build/tox/py27/bin/nosetests
+   py34 inst: /../sprockets-dynamodb/.build/tox/dist/sprockets-dynamodb-0.0.0.zip
    py34 runtests: PYTHONHASHSEED='2156646470'
-   py34 runtests: commands[0] | /.../sprockets.clients.dynamodb/build/tox/py34/bin/nosetests
+   py34 runtests: commands[0] | /.../sprockets-dynamodb/build/tox/py34/bin/nosetests
    _________________________________ summary _________________________________
      py27: commands succeeded
      py34: commands succeeded
