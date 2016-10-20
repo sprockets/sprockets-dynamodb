@@ -873,37 +873,41 @@ class Client(object):
         """
         self.logger.debug('%s on %s request #%i = %r',
                           action, table, attempt, response)
-        now, error, result = time.time(), None, None
+        now, exception, result = time.time(), None, None
         try:
-            result = self._process_response(response)
+            future.set_result(self._process_response(response))
         except aws_exceptions.ConfigNotFound as error:
-            future.set_exception(exceptions.ConfigNotFound(str(error)))
+            exception = exceptions.ConfigNotFound(str(error))
         except aws_exceptions.ConfigParserError as error:
-            future.set_exception(exceptions.ConfigParserError(str(error)))
+            exception = exceptions.ConfigParserError(str(error))
         except aws_exceptions.NoCredentialsError as error:
-            future.set_exception(exceptions.NoCredentialsError(str(error)))
+            exception = exceptions.NoCredentialsError(str(error))
         except aws_exceptions.NoProfileError as error:
-            future.set_exception(exceptions.NoProfileError(str(error)))
-        except aws_exceptions.AWSError as aws_error:
-            error = exceptions.DynamoDBException(aws_error)
+            exception = exceptions.NoProfileError(str(error))
+        except aws_exceptions.AWSError as error:
+            exception =  exceptions.DynamoDBException(error)
         except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
                 _select.error, ssl.socket_error, socket.gaierror) as error:
-            future.set_exception(exceptions.RequestException(str(error)))
+            exception = exceptions.RequestException(str(error))
         except TimeoutError:
-            future.set_exception(exceptions.TimeoutException())
+            exception = exceptions.TimeoutException()
         except httpclient.HTTPError as error:
             if error.code == 599:
-                future.set_exception(exceptions.TimeoutException())
+                exception = exceptions.TimeoutException()
             else:
-                response = getattr(error, 'response', error)
-                future.set_exception(exceptions.RequestException(
-                    getattr(response, 'body', str(error.code))))
-        except Exception as exception:
-            error = exception
+                exception = exceptions.RequestException(
+                    getattr(getattr(error, 'response', error),
+                            'body', str(error.code)))
+        except Exception as error:
+            exception = error
+
+        if exception:
+            future.set_exception(exception)
+
         measurements.append(
             Measurement(now, action, table, attempt, max(now, start) - start,
-                        error.__class__.__name__ if error else error))
-        future.set_exception(error) if error else future.set_result(result)
+                        exception.__class__.__name__
+                        if exception else exception))
 
     @staticmethod
     def _process_response(response):
