@@ -873,7 +873,7 @@ class Client(object):
         """
         self.logger.debug('%s on %s request #%i = %r',
                           action, table, attempt, response)
-        now, exception, result = time.time(), None, None
+        now, exception = time.time(), None
         try:
             future.set_result(self._process_response(response))
         except aws_exceptions.ConfigNotFound as error:
@@ -885,7 +885,7 @@ class Client(object):
         except aws_exceptions.NoProfileError as error:
             exception = exceptions.NoProfileError(str(error))
         except aws_exceptions.AWSError as error:
-            exception =  exceptions.DynamoDBException(error)
+            exception = exceptions.DynamoDBException(error)
         except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
                 _select.error, ssl.socket_error, socket.gaierror) as error:
             exception = exceptions.RequestException(str(error))
