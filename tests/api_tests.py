@@ -75,6 +75,7 @@ class AsyncTestCase(testing.AsyncTestCase):
                 return False
         return True
 
+
 class AsyncItemTestCase(AsyncTestCase):
 
     def setUp(self):
@@ -116,107 +117,75 @@ class AsyncItemTestCase(AsyncTestCase):
 
 class AWSClientTests(AsyncTestCase):
 
+    def create_table_expecting_raise(self, exception, future_exception=None):
+        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
+            future = concurrent.Future()
+            future.set_exception(future_exception or exception)
+            fetch.return_value = future
+            with self.assertRaises(exception):
+                yield self.client.create_table(self.generic_table_definition())
+
     @testing.gen_test
     def test_raises_config_not_found_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = aws_exceptions.ConfigNotFound(path='/test')
-            with self.assertRaises(dynamodb.ConfigNotFound):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(
+            aws_exceptions.ConfigNotFound,
+            aws_exceptions.ConfigNotFound(path='/test'))
 
     @testing.gen_test
     def test_raises_config_parser_error(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = aws_exceptions.ConfigParserError(path='/test')
-            with self.assertRaises(dynamodb.ConfigParserError):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(aws_exceptions.ConfigParserError,
+                                          aws_exceptions.ConfigParserError(
+                                              path='/test'))
 
     @testing.gen_test
     def test_raises_no_credentials_error(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = aws_exceptions.NoCredentialsError()
-            with self.assertRaises(dynamodb.NoCredentialsError):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(aws_exceptions.NoCredentialsError)
 
     @testing.gen_test
     def test_raises_no_profile_error(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = aws_exceptions.NoProfileError(profile='test-1',
-                                                              path='/test')
-            with self.assertRaises(dynamodb.NoProfileError):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(
+            aws_exceptions.NoProfileError,
+            aws_exceptions.NoProfileError(profile='test-1', path='/test'))
 
     @testing.gen_test
     def test_raises_request_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = httpclient.HTTPError(500, 'uh-oh')
-            with self.assertRaises(dynamodb.RequestException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(httpclient.HTTPError,
+                                          httpclient.HTTPError(500, 'uh-oh'))
 
     @testing.gen_test
     def test_raises_timeout_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = httpclient.HTTPError(599)
-            with self.assertRaises(dynamodb.TimeoutException):
-                yield self.client.create_table(self.generic_table_definition())
-
-    @testing.gen_test
-    def test_fetch_future_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            future = concurrent.Future()
-            fetch.return_value = future
-            future.set_exception(dynamodb.DynamoDBException())
-            with self.assertRaises(dynamodb.DynamoDBException):
-               yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(httpclient.HTTPError,
+                                          httpclient.HTTPError(599))
 
     @testing.gen_test
     def test_empty_fetch_response_raises_dynamodb_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            future = concurrent.Future()
-            fetch.return_value = future
-            future.set_result(None)
-            with self.assertRaises(dynamodb.DynamoDBException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(dynamodb.DynamoDBException)
 
     @testing.gen_test
     def test_gaierror_raises_request_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = socket.gaierror
-            with self.assertRaises(dynamodb.RequestException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(socket.gaierror)
 
     @testing.gen_test
     def test_oserror_raises_request_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = OSError
-            with self.assertRaises(dynamodb.RequestException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(OSError)
 
     @unittest.skipIf(sys.version_info.major < 3,
                      'ConnectionError is Python3 only')
     @testing.gen_test
     def test_connection_error_request_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = ConnectionError
-            with self.assertRaises(dynamodb.RequestException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(ConnectionError)
 
     @unittest.skipIf(sys.version_info.major < 3,
                      'ConnectionResetError is Python3 only')
     @testing.gen_test
     def test_connection_reset_error_request_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = ConnectionResetError
-            with self.assertRaises(dynamodb.RequestException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(ConnectionResetError)
 
     @unittest.skipIf(sys.version_info.major < 3,
                      'TimeoutError is Python3 only')
     @testing.gen_test
     def test_connection_timeout_error_request_exception(self):
-        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
-            fetch.side_effect = TimeoutError
-            with self.assertRaises(dynamodb.RequestException):
-                yield self.client.create_table(self.generic_table_definition())
+        self.create_table_expecting_raise(TimeoutError)
 
     @testing.gen_test
     def test_retriable_exception_has_max_retries_measurements(self):
