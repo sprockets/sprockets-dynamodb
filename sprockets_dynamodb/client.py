@@ -734,7 +734,9 @@ class Client(object):
     @gen.coroutine
     def execute(self, action, parameters):
         """
-        Invoke a DynamoDB action
+        Execute a DynamoDB action with the given parameters. The method will
+        retry requests that failed due to OS level errors or when being
+        throttled by DynamoDB.
 
         :param str action: DynamoDB action to invoke
         :param dict parameters: parameters to send into the action
@@ -765,12 +767,6 @@ class Client(object):
             :exc:`~sprockets_dynamodb.exceptions.ValidationException`
 
         """
-        result = yield self._execute_action(action, parameters)
-        self.logger.debug('%s result: %r', action, result)
-        raise gen.Return(_unwrap_result(action, result))
-
-    @gen.coroutine
-    def _execute_action(self, action, parameters):
         measurements = collections.deque([], self._max_retries)
         for attempt in range(1, self._max_retries + 1):
             try:
@@ -787,7 +783,6 @@ class Client(object):
                 self.logger.warning('%r on attempt %i, sleeping %.2f seconds',
                                     error, attempt, duration)
                 yield gen.sleep(duration)
-                continue
             except exceptions.DynamoDBException as error:
                 if self._instrumentation_callback:
                     self._instrumentation_callback(measurements)
@@ -795,7 +790,8 @@ class Client(object):
             else:
                 if self._instrumentation_callback:
                     self._instrumentation_callback(measurements)
-                raise gen.Return(result)
+                self.logger.debug('%s result: %r', action, result)
+                raise gen.Return(_unwrap_result(action, result))
 
     def set_error_callback(self, callback):
         """Assign a method to invoke when a request has encountered an
@@ -831,41 +827,22 @@ class Client(object):
         start = time.time()
 
         def handle_response(request):
+            """Invoked by the IOLoop when fetch has a response to process.
+
+            :param tornado.concurrent.Future request: The request future
+
+            """
             self._on_response(
                 action, parameters.get('TableName', 'Unknown'), attempt,
                 start, request, future, measurements)
 
-        try:
-            aws_response = self._client.fetch(
-                'POST', '/',
-                body=json.dumps(parameters).encode('utf-8'),
-                headers={
-                    'x-amz-target': 'DynamoDB_20120810.{}'.format(action),
-                    'Content-Type': 'application/x-amz-json-1.0',
-                })
-        except aws_exceptions.ConfigNotFound as error:
-            future.set_exception(exceptions.ConfigNotFound(str(error)))
-        except aws_exceptions.ConfigParserError as error:
-            future.set_exception(exceptions.ConfigParserError(str(error)))
-        except aws_exceptions.NoCredentialsError as error:
-            future.set_exception(exceptions.NoCredentialsError(str(error)))
-        except aws_exceptions.NoProfileError as error:
-            future.set_exception(exceptions.NoProfileError(str(error)))
-        except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
-                _select.error, ssl.socket_error, socket.gaierror) as error:
-            future.set_exception(exceptions.RequestException(str(error)))
-        except TimeoutError:
-            future.set_exception(exceptions.TimeoutException())
-        except httpclient.HTTPError as err:
-            if err.code == 599:
-                future.set_exception(exceptions.TimeoutException())
-            else:
-                reason = str(err.code)
-                if err.response and hasattr(err.response, 'body'):
-                    reason = err.response.body
-                future.set_exception(exceptions.RequestException(reason))
-        else:
-            ioloop.IOLoop.current().add_future(aws_response, handle_response)
+        ioloop.IOLoop.current().add_future(self._client.fetch(
+            'POST', '/',
+            body=json.dumps(parameters).encode('utf-8'),
+            headers={
+                'x-amz-target': 'DynamoDB_20120810.{}'.format(action),
+                'Content-Type': 'application/x-amz-json-1.0',
+            }), handle_response)
         return future
 
     def _on_exception(self, error):
@@ -896,26 +873,41 @@ class Client(object):
         """
         self.logger.debug('%s on %s request #%i = %r',
                           action, table, attempt, response)
-        now, error, result = time.time(), None, None
+        now, exception = time.time(), None
         try:
-            result = self._process_response(response)
-        except aws_exceptions.AWSError as aws_error:
-            error = exceptions.DynamoDBException(aws_error)
-        except httpclient.HTTPError as http_err:
-            if http_err.code == 599:
-                error = exceptions.TimeoutException()
-            else:
-                response = getattr(http_err, 'response', http_err)
-                error = exceptions.RequestException(
-                    getattr(response, 'body', str(http_err.code)))
+            future.set_result(self._process_response(response))
+        except aws_exceptions.ConfigNotFound as error:
+            exception = exceptions.ConfigNotFound(str(error))
+        except aws_exceptions.ConfigParserError as error:
+            exception = exceptions.ConfigParserError(str(error))
+        except aws_exceptions.NoCredentialsError as error:
+            exception = exceptions.NoCredentialsError(str(error))
+        except aws_exceptions.NoProfileError as error:
+            exception = exceptions.NoProfileError(str(error))
+        except aws_exceptions.AWSError as error:
+            exception = exceptions.DynamoDBException(error)
+        except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
+                _select.error, ssl.socket_error, socket.gaierror) as error:
+            exception = exceptions.RequestException(str(error))
         except TimeoutError:
-            error = exceptions.TimeoutException()
-        except Exception as exception:
-            error = exception
+            exception = exceptions.TimeoutException()
+        except httpclient.HTTPError as error:
+            if error.code == 599:
+                exception = exceptions.TimeoutException()
+            else:
+                exception = exceptions.RequestException(
+                    getattr(getattr(error, 'response', error),
+                            'body', str(error.code)))
+        except Exception as error:
+            exception = error
+
+        if exception:
+            future.set_exception(exception)
+
         measurements.append(
             Measurement(now, action, table, attempt, max(now, start) - start,
-                        error.__class__.__name__ if error else error))
-        future.set_exception(error) if error else future.set_result(result)
+                        exception.__class__.__name__
+                        if exception else exception))
 
     @staticmethod
     def _process_response(response):

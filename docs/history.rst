@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`2.1.0`_ (20 Oct 2016)
+----------------------
+- Fix exception handling for requests to actually catch all the exceptions we care about
+
 `2.0.0`_ (17 Oct 2016)
 ----------------------
 - Breaking API change for Client.get_item to allow for return values for ConsumedCapacity
@@ -31,6 +35,7 @@ Release History
 ---------------
 
 .. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.0.0...master
+.. _2.1.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.0.0...2.1.0
 .. _2.0.0: https://github.com/sprockets/sprockets-dynamodb/compare/1.1.0...2.0.0
 .. _1.1.0: https://github.com/sprockets/sprockets-dynamodb/compare/1.0.2...1.1.0
 .. _1.0.2: https://github.com/sprockets/sprockets-dynamodb/compare/1.0.1...1.0.2
