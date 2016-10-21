@@ -55,7 +55,7 @@ Version History
 Available at https://sprockets-dynamodb.readthedocs.org/en/latest/history.html
 
 .. |Version| image:: https://img.shields.io/pypi/v/sprockets-dynamodb.svg?
-   :target: http://badge.fury.io/py/sprockets-dynamodb
+   :target: https://pypi.python.org/pypi/sprockets-dynamodb
 
 .. |Status| image:: https://img.shields.io/travis/sprockets/sprockets-dynamodb.svg?
    :target: https://travis-ci.org/sprockets/sprockets-dynamodb

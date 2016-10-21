@@ -53,7 +53,7 @@ setuptools.setup(
     test_suite='nose.collector',
     tests_require=read_requirements('testing.txt'),
     extras_require={
-        'influxdb': ['sprockets-influxdb>=1.2.0,<2']
+        'influxdb': ['sprockets-influxdb>=1.4.0,<2']
     },
     zip_safe=True
 )
