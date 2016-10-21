@@ -13,6 +13,16 @@ INFLUXDB_DATABASE = 'dynamodb'
 INFLUXDB_MEASUREMENT = os.getenv('SERVICE', 'DynamoDB')
 
 
+def _no_creds_should_return_429():
+    """Returns ``True`` if the ``DYANMODB_NO_CREDS_RATE_LIMIT`` environment
+    variable is set to the string ``true``.
+
+    :rtype: bool
+
+    """
+    return os.environ.get('DYANMODB_NO_CREDS_RATE_LIMIT', '').lower() == 'true'
+
+
 class DynamoDBMixin(object):
     """The DynamoDBMixin is an opinionated :class:`~tornado.web.RequestHandler`
     mixin class that
@@ -35,6 +45,9 @@ class DynamoDBMixin(object):
         """
         if isinstance(error, exceptions.ConditionalCheckFailedException):
             raise web.HTTPError(409, reason='Condition Check Failure')
+        elif isinstance(error, exceptions.NoCredentialsError):
+            if _no_creds_should_return_429():
+                raise web.HTTPError(429, reason='Instance Credentials Failure')
         elif isinstance(error, (exceptions.ThroughputExceeded,
                                 exceptions.ThrottlingException)):
             raise web.HTTPError(429, reason='Too Many Requests')

@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`2.1.1`_ (21 Oct 2016)
+----------------------
+- Add ``DYANMODB_NO_CREDS_RATE_LIMIT`` environment variable support to the mixin
+
 `2.1.0`_ (20 Oct 2016)
 ----------------------
 - Fix exception handling for requests to actually catch all the exceptions we care about
@@ -34,7 +38,8 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.0.0...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.1.1...master
+.. _2.1.1: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.0...2.1.1
 .. _2.1.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.0.0...2.1.0
 .. _2.0.0: https://github.com/sprockets/sprockets-dynamodb/compare/1.1.0...2.0.0
 .. _1.1.0: https://github.com/sprockets/sprockets-dynamodb/compare/1.0.2...1.1.0

@@ -20,15 +20,18 @@ Configuration
 -------------
 The following table details the environment variable configuration options.
 
-+--------------------------+--------------------------------------------------------------------+---------+
-| Variable                 | Definition                                                         | Default |
-+==========================+====================================================================+=========+
-| ``DYNAMODB_ENDPOINT``    | Override the default DynamoDB HTTP endpoint                        |         |
-+--------------------------+--------------------------------------------------------------------+---------+
-| ``DYNAMODB_MAX_CLIENTS`` | Maximum number of concurrent DynamoDB clients/requests per process | ``100`` |
-+--------------------------+--------------------------------------------------------------------+---------+
-| ``DYNAMODB_MAX_RETRIES`` | Maximum number retries for transient errors                        | ``3``   |
-+--------------------------+--------------------------------------------------------------------+---------+
++----------------------------------+--------------------------------------------------------------------------+---------+
+| Variable                         | Definition                                                               | Default |
++==================================+==========================================================================+=========+
+| ``DYNAMODB_ENDPOINT``            | Override the default DynamoDB HTTP endpoint                              |         |
++----------------------------------+--------------------------------------------------------------------------+---------+
+| ``DYNAMODB_MAX_CLIENTS``         | Maximum number of concurrent DynamoDB clients/requests per process       | ``100`` |
++----------------------------------+--------------------------------------------------------------------------+---------+
+| ``DYNAMODB_MAX_RETRIES``         | Maximum number retries for transient errors                              | ``3``   |
++----------------------------------+--------------------------------------------------------------------------+---------+
+| ``DYANMODB_NO_CREDS_RATE_LIMIT`` | If set to ``true``, a ``sprockets_dynamodb.NoCredentialsException`` will |         |
+|                                  | return a 429 response when using ``sprockets_dynamodb.DynamoDBMixin``    |         |
++----------------------------------+--------------------------------------------------------------------------+---------+
 
 Mixin Configuration
 ^^^^^^^^^^^^^^^^^^^
