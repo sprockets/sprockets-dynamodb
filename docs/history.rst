@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`2.1.2`_ (28 Oct 2016)
+----------------------
+- Change the pinning of tornado-aws to open it up a little wider
+
 `2.1.1`_ (21 Oct 2016)
 ----------------------
 - Add ``DYANMODB_NO_CREDS_RATE_LIMIT`` environment variable support to the mixin
@@ -38,7 +42,8 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.1.1...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.1.2...master
+.. _2.1.2: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.1...2.1.2
 .. _2.1.1: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.0...2.1.1
 .. _2.1.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.0.0...2.1.0
 .. _2.0.0: https://github.com/sprockets/sprockets-dynamodb/compare/1.1.0...2.0.0
