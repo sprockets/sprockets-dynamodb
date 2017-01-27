@@ -772,9 +772,11 @@ class Client(object):
             try:
                 result = yield self._execute(
                     action, parameters, attempt, measurements)
-            except (exceptions.RequestException,
+            except (exceptions.InternalServerError,
+                    exceptions.RequestException,
                     exceptions.ThrottlingException,
-                    exceptions.ThroughputExceeded) as error:
+                    exceptions.ThroughputExceeded,
+                    exceptions.ServiceUnavailable) as error:
                 if attempt == self._max_retries:
                     if self._instrumentation_callback:
                         self._instrumentation_callback(measurements)
