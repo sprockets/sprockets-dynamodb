@@ -42,6 +42,14 @@ class InternalFailure(DynamoDBException):
     pass
 
 
+class InternalServerError(DynamoDBException):
+    """The request processing has failed because DynamoDB could not process
+    your request.
+
+    """
+    pass
+
+
 class ItemCollectionSizeLimitExceeded(DynamoDBException):
     """An item collection is too large. This exception is only returned for
     tables that have one or more local secondary indexes.
@@ -196,6 +204,8 @@ MAP = {
     'com.amazonaws.dynamodb.v20120810#ItemCollectionSizeLimitExceededException':
     ItemCollectionSizeLimitExceeded,
     'com.amazonaws.dynamodb.v20120810#InternalFailure': InternalFailure,
+    'com.amazonaws.dynamodb.v20120810#InternalServerError':
+    InternalServerError,
     'com.amazonaws.dynamodb.v20120810#LimitExceededException': LimitExceeded,
     'com.amazonaws.dynamodb.v20120810#ProvisionedThroughputExceededException':
     ThroughputExceeded,
@@ -204,5 +214,7 @@ MAP = {
     ResourceNotFound,
     'com.amazonaws.dynamodb.v20120810#ThrottlingException':
     ThrottlingException,
-    'com.amazon.coral.validate#ValidationException': ValidationException
+    'com.amazon.coral.validate#ValidationException': ValidationException,
+    'com.amazonaws.dynamodb.v20120810#ServiceUnavailable':
+    ServiceUnavailable
 }

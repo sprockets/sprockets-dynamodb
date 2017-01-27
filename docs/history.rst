@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`2.1.3`_ (27 Jan 2017)
+----------------------
+- Add HTTP Internal Server Error (500) and Service Unavailable (503) to retriable exceptions
+
 `2.1.2`_ (28 Oct 2016)
 ----------------------
 - Change the pinning of tornado-aws to open it up a little wider
@@ -42,7 +46,8 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.1.2...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.1.3...master
+.. _2.1.3: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.2...2.1.3
 .. _2.1.2: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.1...2.1.2
 .. _2.1.1: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.0...2.1.1
 .. _2.1.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.0.0...2.1.0
