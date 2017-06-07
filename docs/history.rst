@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`2.2.0`_ (06 Jun 2017)
+----------------------
+- Update to tornado-aws 0.8.0 and add Python 3.6 to supported versions
+
 `2.1.3`_ (27 Jan 2017)
 ----------------------
 - Add HTTP Internal Server Error (500) and Service Unavailable (503) to retriable exceptions
@@ -46,7 +50,8 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.1.3...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.2.0...master
+.. _2.2.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.3...2.2.0
 .. _2.1.3: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.2...2.1.3
 .. _2.1.2: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.1...2.1.2
 .. _2.1.1: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.0...2.1.1
