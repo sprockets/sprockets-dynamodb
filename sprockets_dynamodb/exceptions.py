@@ -199,22 +199,15 @@ class ValidationException(DynamoDBException):
 
 
 MAP = {
-    'com.amazonaws.dynamodb.v20120810#ConditionalCheckFailedException':
-    ConditionalCheckFailedException,
-    'com.amazonaws.dynamodb.v20120810#ItemCollectionSizeLimitExceededException':
-    ItemCollectionSizeLimitExceeded,
-    'com.amazonaws.dynamodb.v20120810#InternalFailure': InternalFailure,
-    'com.amazonaws.dynamodb.v20120810#InternalServerError':
-    InternalServerError,
-    'com.amazonaws.dynamodb.v20120810#LimitExceededException': LimitExceeded,
-    'com.amazonaws.dynamodb.v20120810#ProvisionedThroughputExceededException':
-    ThroughputExceeded,
-    'com.amazonaws.dynamodb.v20120810#ResourceInUseException': ResourceInUse,
-    'com.amazonaws.dynamodb.v20120810#ResourceNotFoundException':
-    ResourceNotFound,
-    'com.amazonaws.dynamodb.v20120810#ThrottlingException':
-    ThrottlingException,
-    'com.amazon.coral.validate#ValidationException': ValidationException,
-    'com.amazonaws.dynamodb.v20120810#ServiceUnavailable':
-    ServiceUnavailable
-}
+    'ConditionalCheckFailedException': ConditionalCheckFailedException,
+    'ItemCollectionSizeLimitExceededException':
+        ItemCollectionSizeLimitExceeded,
+    'InternalFailure': InternalFailure,
+    'InternalServerError': InternalServerError,
+    'LimitExceededException': LimitExceeded,
+    'ProvisionedThroughputExceededException': ThroughputExceeded,
+    'ResourceInUseException': ResourceInUse,
+    'ResourceNotFoundException': ResourceNotFound,
+    'ThrottlingException': ThrottlingException,
+    'ValidationException': ValidationException,
+    'ServiceUnavailable': ServiceUnavailable}

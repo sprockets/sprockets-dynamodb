@@ -18,7 +18,7 @@ try:
 except ImportError:  # pragma: nocover
     pass
 
-version_info = (2, 1, 3)
+version_info = (2, 2, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
