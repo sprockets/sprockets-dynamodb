@@ -35,7 +35,7 @@ The following table details the environment variable configuration options.
 
 Mixin Configuration
 ^^^^^^^^^^^^^^^^^^^
-The ``sprockets_dynamodb.mixins.DynamoDBMixin`` class will automatically raise ``HTTPError``
+The ``sprockets_dynamodb.DynamoDBMixin`` class will automatically raise ``HTTPError``
 responses for different classes of errors coming from DynamoDB. In addition it will attempt to
 work with the `Sprockets InfluxDB <https://github.com/sprockets/sprockets-influxdb>`_ client
 to instrument all DynamoDB requests, submitting per request measurements to InfluxDB. It will
