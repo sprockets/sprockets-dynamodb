@@ -234,6 +234,28 @@ class AWSClientTests(AsyncTestCase):
 
         yield wait_for_measurements.wait()
 
+    @testing.gen_test
+    def test_awsclient_exception_has_max_retries_measurements(self):
+        definition = self.generic_table_definition()
+
+        wait_for_measurements = locks.Event()
+
+        def instrumentation_check(measurements):
+            for attempt, measurement in enumerate(measurements):
+                self.assertEqual(measurement.error, 'AWSClientException')
+            self.assertEqual(len(measurements), 3)
+            wait_for_measurements.set()
+
+        self.client.set_instrumentation_callback(instrumentation_check)
+        with mock.patch('tornado_aws.client.AsyncAWSClient.fetch') as fetch:
+            future = concurrent.Future()
+            fetch.return_value = future
+            future.set_exception(aws_exceptions.AWSClientException())
+            with self.assertRaises(aws_exceptions.AWSClientException):
+                yield self.client.create_table(definition)
+
+        yield wait_for_measurements.wait()
+
 
 class CreateTableTests(AsyncTestCase):
 

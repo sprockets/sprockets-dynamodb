@@ -772,7 +772,8 @@ class Client(object):
             try:
                 result = yield self._execute(
                     action, parameters, attempt, measurements)
-            except (exceptions.InternalServerError,
+            except (aws_exceptions.AWSClientException,
+                    exceptions.InternalServerError,
                     exceptions.RequestException,
                     exceptions.ThrottlingException,
                     exceptions.ThroughputExceeded,
