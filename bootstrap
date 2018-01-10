@@ -33,25 +33,14 @@ else
   exit 2
 fi
 
-COMPOSE_ARGS=
-if test -n "${DOCKER_COMPOSE_PREFIX}"
-then
-  COMPOSE_ARGS="-p ${DOCKER_COMPOSE_PREFIX}"
-fi
-
 get_exposed_port() {
-  docker-compose ${COMPOSE_ARGS} port $1 $2 | cut -d: -f2
+  docker-compose port $1 $2 | cut -d: -f2
 }
 
 build_env_file() {
-  DYNAMODB_PORT=$(get_exposed_port dynamodb 7777)
-  (echo "export DOCKER_COMPOSE_PREFIX=${DOCKER_COMPOSE_PREFIX}"
-   echo "export DOCKER_TLS_VERIFY=${DOCKER_TLS_VERIFY}"
-   echo "export DOCKER_HOST=${DOCKER_HOST}"
-   echo "export DOCKER_CERT_PATH=${DOCKER_CERT_PATH}"
-   echo "export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}"
-   echo "export DYNAMODB_ENDPOINT=http://${DOCKER_IP}:${DYNAMODB_PORT}"
-  ) > $1
+cat > $1<<EOF
+export DYNAMODB_ENDPOINT=http://${DOCKER_IP}:$(get_exposed_port dynamodb 7777)
+EOF
 }
 
 set -e
@@ -63,9 +52,8 @@ then
   # just build the environment file from docker containers
   build_env_file build/test-environment
 else
-  docker-compose ${COMPOSE_ARGS} stop
-  docker-compose ${COMPOSE_ARGS} rm --force
-  docker-compose ${COMPOSE_ARGS} up -d
+  docker-compose down --volumes --remove-orphans
+  docker-compose up -d
   build_env_file build/test-environment
 fi
 cat build/test-environment
