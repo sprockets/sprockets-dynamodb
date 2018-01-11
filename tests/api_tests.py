@@ -182,6 +182,10 @@ class AWSClientTests(AsyncTestCase):
         self.create_table_expecting_raise(dynamodb.RequestException,
                                           TimeoutError)
 
+    def test_tornado_aws_request_exception(self):
+        self.create_table_expecting_raise(dynamodb.RequestException,
+                                          aws_exceptions.RequestException(error=OSError))
+
     @testing.gen_test
     def test_retriable_exception_has_max_retries_measurements(self):
         definition = self.generic_table_definition()
