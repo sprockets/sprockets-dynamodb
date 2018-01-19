@@ -1,2 +1,2 @@
-tornado-aws>=0.8,<1
+tornado-aws>=1.0,<2
 tornado>=4.0

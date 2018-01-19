@@ -888,7 +888,8 @@ class Client(object):
             exception = exceptions.NoProfileError(str(error))
         except aws_exceptions.AWSError as error:
             exception = exceptions.DynamoDBException(error)
-        except (ConnectionError, ConnectionResetError, OSError, ssl.SSLError,
+        except (ConnectionError, ConnectionResetError, OSError,
+                aws_exceptions.RequestException, ssl.SSLError,
                 _select.error, ssl.socket_error, socket.gaierror) as error:
             exception = exceptions.RequestException(str(error))
         except TimeoutError:
