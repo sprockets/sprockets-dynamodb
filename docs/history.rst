@@ -3,6 +3,11 @@
 Release History
 ===============
 
+`2.3.0`_ (24 Jan 2018)
+----------------------
+- Add handling for ``tornado_aws.exceptions.RequestException``
+- Update to tornado-aws 1.0.0
+
 `2.2.0`_ (06 Jun 2017)
 ----------------------
 - Update to tornado-aws 0.8.0 and add Python 3.6 to supported versions
@@ -50,7 +55,8 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.2.0...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/2.3.0...master
+.. _2.3.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.2.0...2.3.0
 .. _2.2.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.3...2.2.0
 .. _2.1.3: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.2...2.1.3
 .. _2.1.2: https://github.com/sprockets/sprockets-dynamodb/compare/2.1.1...2.1.2
