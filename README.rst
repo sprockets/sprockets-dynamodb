@@ -2,7 +2,7 @@ Sprockets DynamoDB
 ==================
 An asynchronous DynamoDB client and mixin for Tornado applications
 
-|Version| |Downloads| |Status| |Coverage| |License|
+|Version| |Status| |Coverage| |License|
 
 Installation
 ------------
@@ -62,9 +62,6 @@ Available at https://sprockets-dynamodb.readthedocs.org/en/latest/history.html
 
 .. |Coverage| image:: https://img.shields.io/codecov/c/github/sprockets/sprockets-dynamodb.svg?
    :target: https://codecov.io/github/sprockets/sprockets-dynamodb?branch=master
-
-.. |Downloads| image:: https://img.shields.io/pypi/dm/sprockets-dynamodb.svg?
-   :target: https://pypi.python.org/pypi/sprockets-dynamodb
 
 .. |License| image:: https://img.shields.io/pypi/l/sprockets-dynamodb.svg?
    :target: https://sprockets-dynamodb.readthedocs.org
