@@ -549,6 +549,14 @@ class Client(object):
             for attribute names in an expression.
         :param dict expression_attribute_values: One or more values that can be
             substituted in an expression.
+        :param str key_condition_expression: The condition that specifies the
+            key value(s) for items to be retrieved by the *Query* action. The
+            condition must perform an equality test on a single partition key
+            value, but can optionally perform one of several comparison tests
+            on a single sort key value. The partition key equality test is
+            required. For examples see `KeyConditionExpression
+            <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/
+            Query.html#Query.KeyConditionExpressions>.
         :param str filter_expression: A string that contains conditions that
             DynamoDB applies after the *Query* operation, but before the data
             is returned to you. Items that do not satisfy the criteria are not
