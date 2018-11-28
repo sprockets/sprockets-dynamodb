@@ -46,7 +46,7 @@ TABLE_DEF = {
 }
 
 dynamo = dynamodb.Client()
-iol = ioloop.IOLoop.instance()
+iol = ioloop.IOLoop.current()
 
 
 def on_table_described(describe_response):

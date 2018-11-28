@@ -833,7 +833,7 @@ class Client(object):
         :rtype: tornado.concurrent.Future
 
         """
-        future = concurrent.TracebackFuture()
+        future = concurrent.Future()
         start = time.time()
 
         def handle_response(request):
