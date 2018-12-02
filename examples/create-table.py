@@ -63,8 +63,8 @@ def on_table_described(describe_response):
     try:
         result = describe_response.result()
         LOGGER.info('found table %s, created %s',
-                    result['Table']['TableName'],
-                    result['Table']['CreationDateTime'])
+                    result['TableName'],
+                    result['CreationDateTime'])
         iol.add_callback(iol.stop)
     except Exception as error:
         LOGGER.warn('table not found, attempting to create: %s', error)
