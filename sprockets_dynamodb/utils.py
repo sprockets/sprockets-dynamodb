@@ -177,5 +177,3 @@ def _unmarshall_dict(value):
     elif key == 'SS':
         return set([v for v in value[key]])
     raise ValueError('Unsupported value type: %s' % key)
-
-

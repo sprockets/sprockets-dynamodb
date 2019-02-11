@@ -55,8 +55,8 @@ class MarshallTests(unittest.TestCase):
         expectation = {
             'key1': {'S': 'str'},
             'key2': {'N': '10'},
-            'key3': {'M':
-                {
+            'key3': {
+                'M': {
                     'sub-key1': {'N': '20'},
                     'sub-key2': {'BOOL': True},
                     'sub-key3': {'S': 'value'}
@@ -68,9 +68,11 @@ class MarshallTests(unittest.TestCase):
             'key6': {'SS': ['a', 'b', 'c']},
             'key7': {'NS': ['1', '2', '3', '4']},
             'key9': {'S': str(uuid_value)},
-            'key10': {'B': base64.b64encode(b'\0x01\0x02\0x03').decode('ascii')},
-            'key11': {'BS': [base64.b64encode(b'\0x01\0x02\0x03').decode('ascii'),
-                             base64.b64encode(b'\0x04\0x05\0x06').decode('ascii')]},
+            'key10': {
+                'B': base64.b64encode(b'\0x01\0x02\0x03').decode('ascii')},
+            'key11': {'BS': [
+                base64.b64encode(b'\0x01\0x02\0x03').decode('ascii'),
+                base64.b64encode(b'\0x04\0x05\0x06').decode('ascii')]},
             'key12': {'S': dt_value.isoformat()}
         }
         self.assertDictEqual(expectation, utils.marshall(value))
@@ -91,8 +93,8 @@ class UnmarshallTests(unittest.TestCase):
         value = {
             'key1': {'S': 'str'},
             'key2': {'N': '10'},
-            'key3': {'M':
-                {
+            'key3': {
+                'M': {
                     'sub-key1': {'N': '20'},
                     'sub-key2': {'BOOL': True},
                     'sub-key3': {'S': 'value'}
@@ -105,9 +107,11 @@ class UnmarshallTests(unittest.TestCase):
             'key7': {'NS': ['1', '2', '3', '4']},
             'key8': {'S': dt_value.isoformat()},
             'key9': {'S': uuid_value},
-            'key10': {'B': base64.b64encode(b'\0x01\0x02\0x03').decode('ascii')},
-            'key11': {'BS': [base64.b64encode(b'\0x01\0x02\0x03').decode('ascii'),
-                             base64.b64encode(b'\0x04\0x05\0x06').decode('ascii')]}
+            'key10': {
+                'B': base64.b64encode(b'\0x01\0x02\0x03').decode('ascii')},
+            'key11': {
+                'BS': [base64.b64encode(b'\0x01\0x02\0x03').decode('ascii'),
+                       base64.b64encode(b'\0x04\0x05\0x06').decode('ascii')]}
         }
         expectation = {
             'key1': 'str',

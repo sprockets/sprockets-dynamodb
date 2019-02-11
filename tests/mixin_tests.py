@@ -12,7 +12,6 @@ class NoCredentials429TestCase(unittest.TestCase):
         if 'DYANMODB_NO_CREDS_RATE_LIMIT' in os.environ:
             del os.environ['DYANMODB_NO_CREDS_RATE_LIMIT']
 
-
     def test_env_var_true(self):
         for value in {'true', 'True', 'TRUE'}:
             os.environ['DYANMODB_NO_CREDS_RATE_LIMIT'] = value

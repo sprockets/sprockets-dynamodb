@@ -71,6 +71,7 @@ def on_table_described(describe_response):
         next_future = dynamo.create_table(TABLE_DEF)
         iol.add_future(next_future, on_created)
 
+
 logging.basicConfig(level=logging.DEBUG,
                     format='%(levelname)1.1s %(name)s: %(message)s')
 

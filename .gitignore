@@ -13,4 +13,5 @@ nosetests.xml
 env2
 env3
 .idea
+.vscode
 docs/_build

@@ -41,12 +41,10 @@ setuptools.setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries',
@@ -54,7 +52,7 @@ setuptools.setup(
     test_suite='nose.collector',
     tests_require=read_requirements('testing.txt'),
     extras_require={
-        'influxdb': ['sprockets-influxdb>=1.4.0,<2']
+        'influxdb': ['sprockets-influxdb>=2,<3']
     },
     zip_safe=True
 )

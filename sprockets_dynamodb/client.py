@@ -18,20 +18,6 @@ from tornado_aws import exceptions as aws_exceptions
 
 from sprockets_dynamodb import exceptions, utils
 
-# Stub Python3 exceptions for Python 2.7
-try:
-    ConnectionError
-except NameError:  # pragma: nocover
-    class ConnectionError(Exception):
-        pass
-
-    class ConnectionResetError(Exception):
-        pass
-
-    class TimeoutError(Exception):
-        pass
-
-
 LOGGER = logging.getLogger(__name__)
 
 Measurement = collections.namedtuple(
@@ -833,7 +819,7 @@ class Client(object):
         :rtype: tornado.concurrent.Future
 
         """
-        future = concurrent.TracebackFuture()
+        future = concurrent.Future()
         start = time.time()
 
         def handle_response(request):

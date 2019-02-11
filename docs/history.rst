@@ -3,6 +3,11 @@
 Release History
 ===============
 
+`3.0.0`_ (11 Feb 2019)
+----------------------
+- Update to support Python 3.7
+- Drop support for Python 2
+
 `2.3.0`_ (24 Jan 2018)
 ----------------------
 - Add handling for ``tornado_aws.exceptions.RequestException``

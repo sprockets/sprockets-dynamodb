@@ -72,12 +72,12 @@ class InvalidParameterCombination(DynamoDBException):
 
 
 class InvalidParameterValue(DynamoDBException):
-    """An invalid or out-of-range value was supplied for the input parameter."""
+    """An invalid or out-of-range value was supplied for the input parameter"""
     pass
 
 
 class InvalidQueryParameter(DynamoDBException):
-    """The AWS query string is malformed or does not adhere to AWS standards."""
+    """The AWS query string is malformed or does not adhere to AWS standards"""
     pass
 
 

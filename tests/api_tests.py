@@ -1,6 +1,7 @@
 import collections
 import datetime
 import logging
+from unittest import mock
 import os
 import random
 import socket
@@ -8,13 +9,7 @@ import sys
 import uuid
 import unittest
 
-import mock
-
-from tornado import concurrent
-from tornado import gen
-from tornado import httpclient
-from tornado import locks
-from tornado import testing
+from tornado import concurrent, gen, httpclient, locks, testing
 from tornado_aws import exceptions as aws_exceptions
 
 import sprockets_dynamodb as dynamodb
@@ -183,8 +178,9 @@ class AWSClientTests(AsyncTestCase):
                                           TimeoutError)
 
     def test_tornado_aws_request_exception(self):
-        self.create_table_expecting_raise(dynamodb.RequestException,
-                                          aws_exceptions.RequestException(error=OSError))
+        self.create_table_expecting_raise(
+            dynamodb.RequestException,
+            aws_exceptions.RequestException(error=OSError))
 
     @testing.gen_test
     def test_retriable_exception_has_max_retries_measurements(self):
