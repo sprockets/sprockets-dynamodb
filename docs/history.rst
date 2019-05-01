@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`3.0.1`_ (01 May 2019)
+----------------------
+- Change the pinning of Tornado to support Tornado 6
+
 `3.0.0`_ (11 Feb 2019)
 ----------------------
 - Update to support Python 3.7
