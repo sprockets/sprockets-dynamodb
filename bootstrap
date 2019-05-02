@@ -39,6 +39,9 @@ get_exposed_port() {
 
 build_env_file() {
 cat > $1<<EOF
+export AWS_DEFAULT_REGION=local
+export AWS_ACCESS_KEY_ID=LOCALDEV
+export AWS_SECRET_ACCESS_KEY=LOCALDEV
 export DYNAMODB_ENDPOINT=http://${DOCKER_IP}:$(get_exposed_port dynamodb 7777)
 EOF
 }
