@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`3.0.2`_ (24 May 2019)
+----------------------
+- Saftely retrieve Attributes key in unwrap_delete_put_update_item for local dev
+
 `3.0.1`_ (02 May 2019)
 ----------------------
 - Change the pinning of Tornado to support Tornado 6
@@ -64,7 +68,8 @@ Release History
 `Next Release`_
 ---------------
 
-.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/3.0.1...master
+.. _Next Release: https://github.com/sprockets/sprockets_dynamodb/compare/3.0.2...master
+.. _3.0.2: https://github.com/sprockets/sprockets-dynamodb/compare/3.0.1...3.0.2
 .. _3.0.1: https://github.com/sprockets/sprockets-dynamodb/compare/3.0.0...3.0.1
 .. _3.0.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.2.0...3.0.0
 .. _2.3.0: https://github.com/sprockets/sprockets-dynamodb/compare/2.2.0...2.3.0
