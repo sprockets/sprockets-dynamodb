@@ -966,7 +966,7 @@ def _unwrap_result(action, result):
 
 def _unwrap_delete_put_update_item(result):
     response = {
-       'Attributes': utils.unmarshall(result['Attributes'] if result else {})
+       'Attributes': utils.unmarshall(result.get('Attributes', {}) if result else {})
     }
     if 'ConsumedCapacity' in result:
         response['ConsumedCapacity'] = result['ConsumedCapacity']
