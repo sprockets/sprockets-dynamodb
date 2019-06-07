@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`3.1.0`_ (07 Jul 2019)
+----------------------
+- When marshalling empty strings on put, translate to value to NULL instead of raising an exception
+
 `3.0.2`_ (24 May 2019)
 ----------------------
 - Saftely retrieve Attributes key in unwrap_delete_put_update_item for local dev
