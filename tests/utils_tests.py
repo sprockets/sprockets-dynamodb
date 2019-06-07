@@ -52,7 +52,8 @@ class MarshallTests(unittest.TestCase):
             'key10': b'\0x01\0x02\0x03',
             'key11': {b'\0x01\0x02\0x03', b'\0x04\0x05\0x06'},
             'key12': dt_value,
-            'key13': ''
+            'key13': '',
+            'key14': b''
         }
         expectation = {
             'key1': {'S': 'str'},
@@ -77,7 +78,8 @@ class MarshallTests(unittest.TestCase):
                 base64.b64encode(b'\0x01\0x02\0x03').decode('ascii'),
                 base64.b64encode(b'\0x04\0x05\0x06').decode('ascii')]},
             'key12': {'S': dt_value.isoformat()},
-            'key13': {'NULL': True}
+            'key13': {'NULL': True},
+            'key14': {'NULL': True}
         }
         self.assertDictEqual(expectation, utils.marshall(value))
 
