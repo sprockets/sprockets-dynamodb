@@ -41,7 +41,8 @@ class MarshallTests(unittest.TestCase):
             'key3': {
                 'sub-key1': 20,
                 'sub-key2': True,
-                'sub-key3': 'value'
+                'sub-key3': 'value',
+                'sub-key4': ''
             },
             'key4': None,
             'key5': ['one', 'two', 'three', 4, None, True],
@@ -50,7 +51,8 @@ class MarshallTests(unittest.TestCase):
             'key9': uuid_value,
             'key10': b'\0x01\0x02\0x03',
             'key11': {b'\0x01\0x02\0x03', b'\0x04\0x05\0x06'},
-            'key12': dt_value
+            'key12': dt_value,
+            'key13': ''
         }
         expectation = {
             'key1': {'S': 'str'},
@@ -59,7 +61,8 @@ class MarshallTests(unittest.TestCase):
                 'M': {
                     'sub-key1': {'N': '20'},
                     'sub-key2': {'BOOL': True},
-                    'sub-key3': {'S': 'value'}
+                    'sub-key3': {'S': 'value'},
+                    'sub-key4': {'NULL': True}
                 }
             },
             'key4': {'NULL': True},
@@ -73,7 +76,8 @@ class MarshallTests(unittest.TestCase):
             'key11': {'BS': [
                 base64.b64encode(b'\0x01\0x02\0x03').decode('ascii'),
                 base64.b64encode(b'\0x04\0x05\0x06').decode('ascii')]},
-            'key12': {'S': dt_value.isoformat()}
+            'key12': {'S': dt_value.isoformat()},
+            'key13': {'NULL': True}
         }
         self.assertDictEqual(expectation, utils.marshall(value))
 

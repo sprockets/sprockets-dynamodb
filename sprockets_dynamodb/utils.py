@@ -93,8 +93,12 @@ def _marshall_value(value):
 
     """
     if PYTHON3 and isinstance(value, bytes):
+        if not value:
+            return {'NULL': True}
         return {'B': base64.b64encode(value).decode('ascii')}
     elif PYTHON3 and isinstance(value, str):
+        if not value:
+            return {'NULL': True}
         return {'S': value}
     elif not PYTHON3 and isinstance(value, str):
         if is_binary(value):
