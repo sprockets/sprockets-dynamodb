@@ -3,6 +3,10 @@
 Release History
 ===============
 
+`3.2.0`_ (17 Nov 2019)
+----------------------
+- Change pin for tornado-aws to support tornado-aws 2
+
 `3.1.0`_ (07 Jul 2019)
 ----------------------
 - When marshalling empty strings on put, translate to value to NULL instead of raising an exception
